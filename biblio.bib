@@ -1,0 +1,48 @@
+@inproceedings{DeepLog,
+	author = {Du, Min and Li, Feifei and Zheng, Guineng and Srikumar, Vivek},
+	title = {DeepLog: Anomaly Detection and Diagnosis from System Logs through Deep Learning},
+	year = {2017},
+	isbn = {9781450349468},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3133956.3134015},
+	doi = {10.1145/3133956.3134015},
+	abstract = {Anomaly detection is a critical step towards building a secure and trustworthy system. The primary purpose of a system log is to record system states and significant events at various critical points to help debug system failures and perform root cause analysis. Such log data is universally available in nearly all computer systems. Log data is an important and valuable resource for understanding system status and performance issues; therefore, the various system logs are naturally excellent source of information for online monitoring and anomaly detection. We propose DeepLog, a deep neural network model utilizing Long Short-Term Memory (LSTM), to model a system log as a natural language sequence. This allows DeepLog to automatically learn log patterns from normal execution, and detect anomalies when log patterns deviate from the model trained from log data under normal execution. In addition, we demonstrate how to incrementally update the DeepLog model in an online fashion so that it can adapt to new log patterns over time. Furthermore, DeepLog constructs workflows from the underlying system log so that once an anomaly is detected, users can diagnose the detected anomaly and perform root cause analysis effectively. Extensive experimental evaluations over large log data have shown that DeepLog has outperformed other existing log-based anomaly detection methods based on traditional data mining methodologies.},
+	booktitle = {Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security},
+	pages = {1285–1298},
+	numpages = {14},
+	keywords = {log data analysis, deep learning, anomaly detection},
+	location = {Dallas, Texas, USA},
+	series = {CCS '17}
+}
+
+@inproceedings{ExperienceReport,
+	author = {He, Shilin and Zhu, Jieming and He, Pinjia and Lyu, Michael R.},
+	booktitle = {2016 IEEE 27th International Symposium on Software Reliability Engineering (ISSRE)}, 
+	title = {Experience Report: System Log Analysis for Anomaly Detection}, 
+	year = {2016},
+	pages = {207-218},
+	url={https://ieeexplore.ieee.org/abstract/document/7774521},
+	abstract = {Anomaly detection plays an important role in management of modern large-scale distributed systems. Logs, which record system runtime information, are widely used for anomaly detection. Traditionally, developers (or operators) often inspect the logs manually with keyword search and rule matching. The increasing scale and complexity of modern systems, however, make the volume of logs explode, which renders the infeasibility of manual inspection. To reduce manual effort, many anomaly detection methods based on automated log analysis are proposed. However, developers may still have no idea which anomaly detection methods they should adopt, because there is a lack of a review and comparison among these anomaly detection methods. Moreover, even if developers decide to employ an anomaly detection method, re-implementation requires a nontrivial effort. To address these problems, we provide a detailed review and evaluation of six state-of-the-art log-based anomaly detection methods, including three supervised methods and three unsupervised methods, and also release an open-source toolkit allowing ease of reuse. These methods have been evaluated on two publicly-available production log datasets, with a total of 15,923,592 log messages and 365,298 anomaly instances. We believe that our work, with the evaluation results as well as the corresponding findings, can provide guidelines for adoption of these methods and provide references for future development.},
+	ISSN = {2332-6549},
+	month = {Oct},
+	doi = {10.1109/ISSRE.2016.21}
+}
+
+@inproceedings{LogRobust,
+	author = {Zhang, Xu and Xu, Yong and Lin, Qingwei and Qiao, Bo and Zhang, Hongyu and Dang, Yingnong and Xie, Chunyu and Yang, Xinsheng and Cheng, Qian and Li, Ze and Chen, Junjie and He, Xiaoting and Yao, Randolph and Lou, Jian-Guang and Chintalapati, Murali and Shen, Furao and Zhang, Dongmei},
+	title = {Robust Log-Based Anomaly Detection on Unstable Log Data},
+	year = {2019},
+	isbn = {9781450355728},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3338906.3338931},
+	doi = {10.1145/3338906.3338931},
+	abstract = {Logs are widely used by large and complex software-intensive systems for troubleshooting. There have been a lot of studies on log-based anomaly detection. To detect the anomalies, the existing methods mainly construct a detection model using log event data extracted from historical logs. However, we find that the existing methods do not work well in practice. These methods have the close-world assumption, which assumes that the log data is stable over time and the set of distinct log events is known. However, our empirical study shows that in practice, log data often contains previously unseen log events or log sequences. The instability of log data comes from two sources: 1) the evolution of logging statements, and 2) the processing noise in log data. In this paper, we propose a new log-based anomaly detection approach, called LogRobust. LogRobust extracts semantic information of log events and represents them as semantic vectors. It then detects anomalies by utilizing an attention-based Bi-LSTM model, which has the ability to capture the contextual information in the log sequences and automatically learn the importance of different log events. In this way, LogRobust is able to identify and handle unstable log events and sequences. We have evaluated LogRobust using logs collected from the Hadoop system and an actual online service system of Microsoft. The experimental results show that the proposed approach can well address the problem of log instability and achieve accurate and robust results on real-world, ever-changing log data.},
+	booktitle = {Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+	pages = {807–817},
+	numpages = {11},
+	keywords = {Data Quality, Log Analysis, Deep Learning, Anomaly Detection, Log Instability},
+	location = {Tallinn, Estonia},
+	series = {ESEC/FSE 2019}
+}

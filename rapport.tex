@@ -1,0 +1,139 @@
+\documentclass[openany, 12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyphsubst}
+\usepackage[english, french]{babel}
+
+%%% Utility packages
+% Links
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	linkcolor = blue!30!black,
+	urlcolor = purple!40!black,
+	citecolor = black
+}
+% Bibliography
+\usepackage{cite}
+\bibliographystyle{plain}
+\usepackage{tocbibind}
+% Glossary
+\usepackage[toc]{glossaries}
+\input{glos}
+\makeglossaries
+
+%%% Display packages
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{xcolor}
+% Title
+\usepackage{titling}
+% Headers
+\setlength{\headheight}{16pt}
+% Font
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+%%% Custom commands
+% Unnumbered in toc
+\newcommand\chapters[1]{
+	\chapter*{#1}
+	\addcontentsline{toc}{chapter}{#1}
+}
+
+\newenvironment{centerall}
+    {\begin{center}\vspace*{\fill}}
+    {\vspace*{\fill}\end{center}}
+
+\newcommand{\email}[1]{
+    \href{mailto:#1}{\underline{\smash{\texttt{\small #1}}}}
+}
+
+% -Page de garde
+% -Sommaire
+% -Remerciements
+% -Synthèse en anglais
+% -Liste des mots-clés
+% -Corps du mémoire
+% -Conclusion
+% -Bibliographie
+% -Lexique: le lexique peut être intégré dans les annexes
+% -Liste des annexes
+
+\begin{document}
+\frontmatter
+\begin{titlingpage}
+	% Header
+	\begin{minipage}{0.55\textwidth}
+		\large
+		Mémoire de PFE
+		
+		\vspace{10pt}
+		Formation FIL
+		
+		\vspace{10pt}
+		IMT Atlantique
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+		\raggedleft
+        \includegraphics[width=\textwidth]{header.png}
+	\end{minipage}
+
+	% Title
+	\centering
+    \begin{minipage}{\textwidth}
+        \centering
+        \vspace{20pt}
+        \Large \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
+        
+        \vspace{5pt}
+        \large Oscar Gloaguen
+        
+        \vspace{60pt}
+        Direction Générale des Finances Publiques
+    \end{minipage}
+    
+    % Logos
+    \begin{figure}[b]
+        \centering
+        \includegraphics[width=\textwidth]{logos.png}
+    \end{figure}
+\end{titlingpage}
+
+\tableofcontents
+\newpage
+
+\chapters{Remerciements}
+\newpage
+
+\begin{abstract}
+\addcontentsline{toc}{chapter}{Résumé}
+Résumé en francais
+\end{abstract}
+
+{\selectlanguage{english} 
+\begin{abstract}
+Abstract in english
+\end{abstract}}
+
+\paragraph{Mots-clés}
+traitement automatique des langues (TAL), apprentissage automatique, apprentissage profond, analyse de logs applicatifs
+\newpage
+
+% Main content
+\mainmatter
+\chapters{Introduction}
+
+\Gls{test}!
+\cite{DeepLog}
+\cite{ExperienceReport}
+\cite{LogRobust}
+
+\newpage
+\backmatter
+\pagenumbering{gobble}
+\bibliography{biblio}
+\newpage
+
+\printglossary[nonumberlist]
+\end{document}
