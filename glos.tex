@@ -2,6 +2,10 @@
 \newcommand{\acronymdesc}[3]{\newacronym[description=\MakeUppercase #2~: #3]{#1}{#1}{#2}}
 
 % Definitions
+\acronymdesc{DGFiP}
+	{Di\-rec\-tion Gé\-né\-rale des Fi\-nan\-ces Pu\-bli\-ques}
+	{Service public de l'État français chargé des missions de gestion publique et de fiscalité (notablement le traitement des impôts)}
+
 \acronymdesc{TAL}
 	{trai\-te\-ment au\-to\-ma\-tique du lan\-gage}
 	{Ensemble de méthodes visant à analyser et traiter le langage naturel}
@@ -14,4 +18,9 @@
 \newglossaryentry{ml}{
     name={ap\-pren\-tis\-sage au\-to\-ma\-tique},
     description={Ou \textit{machine learning} en anglais, ensemble de méthodes visant a développer des algorithmes généraux basés sur l'apprentissage de données, s'opposant a un algorithme explicite classique.}
+}
+
+\newglossaryentry{deep}{
+    name={ap\-pren\-tis\-sage pro\-fond},
+    description={Branche de l'\gls{ml} se basant sur des réseaux de neurones artificiels, comportant plusieurs couches de traitement de données permettant d'extraire des caractéristiques complexes.}
 }
