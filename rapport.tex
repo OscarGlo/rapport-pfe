@@ -13,12 +13,13 @@
 	urlcolor = purple!40!black,
 	citecolor = black
 }
+\usepackage{todonotes}
 % Bibliography
 \usepackage{cite}
 \bibliographystyle{plain}
 \usepackage{tocbibind}
 % Glossary
-\usepackage[toc]{glossaries}
+\usepackage[toc,automake]{glossaries}
 \input{glos}
 \makeglossaries
 
@@ -32,6 +33,7 @@
 \setlength{\headheight}{16pt}
 % Font
 \usepackage{helvet}
+\usepackage{inconsolata}
 \renewcommand{\familydefault}{\sfdefault}
 
 %%% Custom commands
@@ -44,10 +46,6 @@
 \newenvironment{centerall}
     {\begin{center}\vspace*{\fill}}
     {\vspace*{\fill}\end{center}}
-
-\newcommand{\email}[1]{
-    \href{mailto:#1}{\underline{\smash{\texttt{\small #1}}}}
-}
 
 % -Page de garde
 % -Sommaire
@@ -87,7 +85,7 @@
         \Large \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
         
         \vspace{5pt}
-        \large Oscar Gloaguen
+        \Large Oscar Gloaguen
         
         \vspace{60pt}
         Direction Générale des Finances Publiques
@@ -108,26 +106,39 @@
 
 \begin{abstract}
 \addcontentsline{toc}{chapter}{Résumé}
-Résumé en francais
+Les \glspl{log} sont une source importante de données détaillant le fonctionnement interne d'une application, mais ne sont pourtant que rarement utilisés a leur plein potentiel. Dans ce mémoire, je vais détailler le processus d'évolution d'un outil d'\gls{ml} qui utilise les \glspl{log} pour détecter et même tenter de prévoir des anomalies logicielles. Le projet s'apparentant plus a un projet de recherche, la démarche scientifique sera détaillée, ainsi que les caractéristiques techniques et le déroulement de l'implémentation. L'organisation du projet avec un stagiaire et moi-même sera développée, ainsi que ses impacts humains et économiques.
 \end{abstract}
 
 {\selectlanguage{english} 
 \begin{abstract}
-Abstract in english
+\Glspl{log} are an important source of data when it comes to the internal workings of software, but they are rarely used to their full potential. In this memoir, I will explain the evolution of a machine learning tool which uses \glspl{log} to detect and even attempt to predict software anomalies. The project being similar to a research project, the scientific protocol will be detailed, as well as the technical characteristics and the course of the implementation. Project management with an intern and myself will be developed, as well as the human and economic impacts of the project.
 \end{abstract}}
 
 \paragraph{Mots-clés}
-traitement automatique des langues (TAL), apprentissage automatique, apprentissage profond, analyse de logs applicatifs
-\newpage
+\gls{TAL}, apprentissage automatique, apprentissage profond, analyse de logs applicatifs
 
 % Main content
 \mainmatter
+\glsresetall
 \chapters{Introduction}
+\todo[inline]{1-2 pages}
 
-\Gls{test}!
-\cite{DeepLog}
-\cite{ExperienceReport}
-\cite{LogRobust}
+\cite{deeplog}
+
+\newpage
+\chapter{Le projet \texttt{analyse-logs}}
+
+\newpage
+\chapter{Recherche et analyse scientifique}
+
+\newpage
+\chapter{Implémentation des solutions}
+
+\newpage
+\chapter{Projections de l'impact du projet}
+
+\newpage
+\chapters{Conclusion}
 
 \newpage
 \backmatter

@@ -1,4 +1,17 @@
-\newglossaryentry{test}{
-	name={Test},
-	description={Ceci est un test}
+% Custom commands
+\newcommand{\acronymdesc}[3]{\newacronym[description=\MakeUppercase #2~: #3]{#1}{#1}{#2}}
+
+% Definitions
+\acronymdesc{TAL}
+	{trai\-te\-ment au\-to\-ma\-tique du lan\-gage}
+	{Ensemble de méthodes visant à analyser et traiter le langage naturel}
+
+\newglossaryentry{log}{
+    name={log},
+    description={De l'anglais log (journal), sortie d'une application (souvent un fichier) représentant le chemin d'exécution d'une application}
+}
+
+\newglossaryentry{ml}{
+    name={ap\-pren\-tis\-sage au\-to\-ma\-tique},
+    description={Ou \textit{machine learning} en anglais, ensemble de méthodes visant a développer des algorithmes généraux basés sur l'apprentissage de données, s'opposant a un algorithme explicite classique.}
 }
