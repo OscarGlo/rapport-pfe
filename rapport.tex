@@ -47,17 +47,6 @@
     {\begin{center}\vspace*{\fill}}
     {\vspace*{\fill}\end{center}}
 
-% -Page de garde
-% -Sommaire
-% -Remerciements
-% -Synthèse en anglais
-% -Liste des mots-clés
-% -Corps du mémoire
-% -Conclusion
-% -Bibliographie
-% -Lexique: le lexique peut être intégré dans les annexes
-% -Liste des annexes
-
 \begin{document}
 \frontmatter
 \begin{titlingpage}
@@ -99,11 +88,18 @@
 \end{titlingpage}
 
 \tableofcontents
-\newpage
 
+\newpage
 \chapters{Remerciements}
-\newpage
+Je souhaite remercier la Direction Générale des Finances Publiques et tout particulièrement Olivier Blanc, pour m'avoir permis d'effectuer mon alternance dans cette équipe et pour m'avoir accompagné tout au long jusqu'au PFE.
 
+\bigskip
+Je tiens a remercier personnellement Robin Gries, qui a su être un vrai coéquipier tout au long de ce projet malgré sa complexité.
+
+\bigskip
+Je voudrais aussi remercier IMT Atlantique ainsi que ses professeurs, et surtout mon tuteur pédagogique Thomas Ledoux qui s'est mis a ma disposition pour le PFE.
+
+\newpage
 \begin{abstract}
 \addcontentsline{toc}{chapter}{Résumé}
 Les \glspl{log} sont une source importante de données détaillant le fonctionnement interne d'une application, mais ne sont pourtant que rarement utilisés a leur plein potentiel. Dans ce mémoire, je vais détailler le processus d'évolution d'un outil d'\gls{ml} qui utilise les \glspl{log} pour détecter et même tenter de prévoir des anomalies logicielles. Le projet s'apparentant plus a un projet de recherche, la démarche scientifique sera détaillée, ainsi que les caractéristiques techniques et le déroulement de l'implémentation. L'organisation du projet avec un stagiaire et moi-même sera développée, ainsi que ses impacts humains et économiques.
@@ -123,9 +119,12 @@ Les \glspl{log} sont une source importante de données détaillant le fonctionne
 \chapters{Introduction}
 \todo[inline]{1-2 pages}
 
-Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi puis Léa. 
+Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi puis Léa. Cependant, les performances des algorithmes implémentés n'étant pas satisfaisantes, c'est ici que nait le sujet de ce PFE. Ce mémoire détaille le processus d'évolution de ce projet dans l'objectif d'amélioration des performances.
 
-\medskip
+\bigskip
+J'ai travaillé sur cette problématique en binôme avec Robin, un stagiaire en dernière année de master. Ce document touchera aussi sur l'organisation du sujet entre nous ainsi que les bénéfices et difficultés a travailler en équipe.
+
+\bigskip
 Ce sujet de PFE s'intègre dans la stratégie d'innovation du SI de la \gls{DGFiP}. L'objectif est de montrer l'efficacité de ces outils, pour mettre en valeur l'innovation et pousser leur utilisation au sein des bureaux. Dans ce cadre, une structure proche de celle d'un projet de recherche a été suivie. Pour cela, nous avons d'abord composé et étudié un état de l'art des algorithmes de détection d'anomalies existants. Ils utilisent pour la plupart des méthodes d'\gls{ml}, avec des algorithmes classiques ou de l'\gls{deep}.
 
 \cite{deeplog}
@@ -133,11 +132,14 @@ Ce sujet de PFE s'intègre dans la stratégie d'innovation du SI de la \gls{DGFi
 \newpage
 \chapter{Le projet \texttt{analyse-logs}}
 
-\section{Historique}
+\section{Contexte du projet}
 
-\subsection{Travail de Rémi}
+La \gls{DGFiP} est une administration française née de la fusion de la Direction \gls{DGI} et de la \gls{DGCP} en 2008. Elle hérite alors des missions des deux entités, en faisant un service public très étendu, en charge notamment de la collecte des impôts et taxes et de la législation fiscale.
 
-\subsection{Travail de Léa}
+Cette administration, comme toute grande structure aujourd'hui, possède un besoin très fort en technologies de l'information, qui est rempli par le \gls{SSI}
+
+\bigskip
+
 
 \section{Structure}
 
