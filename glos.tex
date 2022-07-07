@@ -1,34 +1,44 @@
 % Custom commands
-\newcommand{\acronymdesc}[3]{\newacronym[description=#2~: #3]{#1}{#1}{#2}}
+\newcommand{\acronymdesc}[4]{\newacronym[type=#1,description=#3~: #4]{#2}{#2}{#3}}
+
+\newglossary[ad]{admin}{adm}{ado}{Glossaire administratif}
+\newglossary[tc]{tech}{tch}{tco}{Glossaire technique}
 
 % Definitions
-\acronymdesc{DGFiP}
+\acronymdesc{admin}{DGFiP}
 	{Di\-rec\-tion Gé\-né\-rale des Fi\-nan\-ces Pu\-bli\-ques}
 	{Service public de l'État rattaché au ministère des finances chargé des missions de gestion publique et de fiscalité}
 
-\acronymdesc{DGCP}
+\acronymdesc{admin}{DGCP}
 	{Di\-rec\-tion Gé\-né\-rale des Comptes Pu\-blics (DGCP)}
 	{Aussi appelée <<trésor public>>. Ancienne administration chargée de la gestion des comptes de l'État et du recouvrement des impôts}
 	
-\acronymdesc{DGI}
+\acronymdesc{admin}{DGI}
 	{Di\-rec\-tion Gé\-né\-rale des Impôts}
 	{Ancienne administration chargée de la liquidation des impôts}
+	
+\acronymdesc{admin}{SI}
+	{Ser\-vice des sys\-tèmes d'In\-for\-ma\-tion}
+	{Service support de la \gls{DGFiP} chargé de la gestion informatique et du développement d'applications}
 
-\acronymdesc{TAL}
+\acronymdesc{tech}{TAL}
 	{trai\-te\-ment au\-to\-ma\-tique du lan\-gage}
 	{Ensemble de méthodes visant à analyser et traiter le langage naturel}
 
 \newglossaryentry{log}{
     name={log},
+	type=tech,
     description={De l'anglais log (journal), sortie d'une application (souvent un fichier) représentant le chemin d'exécution d'une application}
 }
 
 \newglossaryentry{ml}{
     name={ap\-pren\-tis\-sage au\-to\-ma\-tique},
+	type=tech,
     description={Ou \textit{machine learning} en anglais, ensemble de méthodes visant a développer des algorithmes généraux basés sur l'apprentissage de données, s'opposant a un algorithme explicite classique.}
 }
 
 \newglossaryentry{deep}{
     name={ap\-pren\-tis\-sage pro\-fond},
+	type=tech,
     description={Branche de l'\gls{ml} se basant sur des réseaux de neurones artificiels, comportant plusieurs couches de traitement de données permettant d'extraire des caractéristiques complexes.}
 }
