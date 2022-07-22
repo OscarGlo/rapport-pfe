@@ -10,8 +10,8 @@
 \hypersetup{
 	colorlinks,
 	linkcolor = blue!30!black,
-	urlcolor = purple!40!black,
-	citecolor = black
+	citecolor = blue!30!black,
+	urlcolor = purple!40!black
 }
 \usepackage{todonotes}
 % Bibliography
@@ -21,14 +21,13 @@
 % Glossary
 \usepackage[toc,automake]{glossaries}
 \input{glos}
+\glsaddall[types={admin,tech}]
 \makeglossaries
 
 %%% Display packages
 \usepackage{graphicx}
 \usepackage{fullpage}
 \usepackage{xcolor}
-% Title
-\usepackage{titling}
 % Headers
 \setlength{\headheight}{16pt}
 % Font
@@ -43,15 +42,25 @@
 	\addcontentsline{toc}{chapter}{#1}
 }
 
+\newcommand\anneximage[3]{
+	\begin{figure}
+		\centering
+		\label{#1}
+		\includegraphics[angle=#2,height=\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
+		\caption{#3}
+	\end{figure}
+}
+
 \newenvironment{centerall}
     {\begin{center}\vspace*{\fill}}
     {\vspace*{\fill}\end{center}}
 
+% DOCUMENT
 \begin{document}
 \frontmatter
-\begin{titlingpage}
+{
 	% Header
-	\begin{minipage}{0.55\textwidth}
+	\begin{minipage}{0.54\textwidth}
 		\large
 		Mémoire de PFE
 		
@@ -63,7 +72,7 @@
 	\end{minipage}
 	\begin{minipage}{0.45\textwidth}
 		\raggedleft
-        \includegraphics[width=\textwidth]{header.png}
+        \includegraphics[width=\textwidth]{images/header.png}
 	\end{minipage}
 
 	% Title
@@ -83,9 +92,9 @@
     % Logos
     \begin{figure}[b]
         \centering
-        \includegraphics[width=\textwidth]{logos.png}
+        \includegraphics[width=\textwidth]{images/logos.png}
     \end{figure}
-\end{titlingpage}
+}
 
 \tableofcontents
 
@@ -169,14 +178,27 @@ Cette administration, comme toute grande structure aujourd'hui, possède un beso
 \newpage
 \chapters{Conclusion}
 
+% BIBLIOGRAPHIE
 \newpage
 \backmatter
 \pagenumbering{gobble}
 \bibliography{biblio}
-\newpage
 
+% GLOSSAIRES
 \printglossary[type=admin,nonumberlist]
 \newpage
-
 \printglossary[type=tech,nonumberlist]
+
+% ANNEXES
+\newpage
+\appendix
+\begin{centerall}
+	\textbf{\HUGE Annexes}
+	\addcontentsline{toc}{chapter}{Annexes}
+\end{centerall}
+
+\anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
+
+\anneximage{orga_si}{90}{Organigramme des bureaux du \gls{SI}}
+
 \end{document}

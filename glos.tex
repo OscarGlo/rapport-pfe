@@ -1,17 +1,19 @@
 % Custom commands
-\newcommand{\acronymdesc}[4]{\newacronym[type=#1,description=#3~: #4]{#2}{#2}{#3}}
+\newcommand{\acronymdesc}[4]{
+	\newacronym[type=#1,description={#3~: #4}]{#2}{#2}{#3}
+}
 
 \newglossary[ad]{admin}{adm}{ado}{Glossaire administratif}
 \newglossary[tc]{tech}{tch}{tco}{Glossaire technique}
 
-% Definitions
+% ADMINISTRATIF
 \acronymdesc{admin}{DGFiP}
 	{Di\-rec\-tion Gé\-né\-rale des Fi\-nan\-ces Pu\-bli\-ques}
 	{Service public de l'État rattaché au ministère des finances chargé des missions de gestion publique et de fiscalité}
 
 \acronymdesc{admin}{DGCP}
 	{Di\-rec\-tion Gé\-né\-rale des Comptes Pu\-blics (DGCP)}
-	{Aussi appelée <<trésor public>>. Ancienne administration chargée de la gestion des comptes de l'État et du recouvrement des impôts}
+	{Aussi appelée <<trésor public>>, ancienne administration chargée de la gestion des comptes de l'État et du recouvrement des impôts}
 	
 \acronymdesc{admin}{DGI}
 	{Di\-rec\-tion Gé\-né\-rale des Impôts}
@@ -20,7 +22,16 @@
 \acronymdesc{admin}{SI}
 	{Ser\-vice des sys\-tèmes d'In\-for\-ma\-tion}
 	{Service support de la \gls{DGFiP} chargé de la gestion informatique et du développement d'applications}
+	
+\acronymdesc{admin}{DPN}
+	{Dir\-ec\-tion des pro\-jets nu\-mé\-ri\-ques}
+	{Direction au sein du \gls{SI} regroupant les différents bureaux en charge de la direction et de la réalisation de projets dans le numérique}
 
+\acronymdesc{admin}{BSI-3}
+	{Bu\-reau du SI des pro\-fes\-sion\-nels}
+	{Bureau dépendant de la \gls{DPN}, chargé}
+
+% TECHNIQUE
 \acronymdesc{tech}{TAL}
 	{trai\-te\-ment au\-to\-ma\-tique du lan\-gage}
 	{Ensemble de méthodes visant à analyser et traiter le langage naturel}
