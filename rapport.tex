@@ -45,9 +45,9 @@
 \newcommand\anneximage[3]{
 	\begin{figure}
 		\centering
-		\label{#1}
 		\includegraphics[angle=#2,height=\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
 		\caption{#3}
+		\label{#1}
 	\end{figure}
 }
 
@@ -140,11 +140,16 @@ Ce sujet de PFE s'intègre dans la stratégie d'innovation du SI de la \gls{DGFi
 
 \newpage
 \chapter{La DGFiP, administration en évolution constante}
-La \gls{DGFiP} est une administration française née de la fusion de la Direction \gls{DGI} et de la \gls{DGCP} en 2008. Elle hérite alors des missions des deux entités, en faisant un service public très étendu, en charge notamment de la collecte des impôts et taxes et de la législation fiscale.
+La \gls{DGFiP} est une administration française née de la fusion de la Direction \gls{DGI} et de la \gls{DGCP} en 2008. Elle hérite alors des missions des deux entités, en faisant un service public très étendu, en charge notamment de la collecte des impôts et taxes et de la législation fiscale. 
 
-Cette administration, comme toute grande structure aujourd'hui, possède un besoin très fort en technologies de l'information, qui est rempli par le \gls{SI}
+Cette administration, comme toute grande structure, possède une hiérarchie forte séparée en 8 
+services, qui définit leur domaine de travail, ainsi que différentes directions (voir organigramme \ref{orga} en annexes). Une majorité des services sont des services métiers, directement en lien avec les missions de la \gls{DGFiP}, mais 3 de ces services sont des services support, ou \glspl{transverse}. Ces derniers sont le service des Ressources Humaines, le service de Stratégie, Pilotage et Budget, et le \gls{SI}. Malgré une interaction indirecte avec le domaine métier des dinances publiques, ils répondent aux besoins de la \gls{DGFiP} en permettant le bon fonctionnement des autres services, ou même en améliorant leur performance.
 
 \bigskip
+
+Cette administration, comme toute grande structure aujourd'hui, possède un besoin très fort en technologies de l'information, qui est rempli par le \gls{SI}. Ce service est indispensable, car de nombreuses missions de la DGFiP reposent sur des programmes (e.g., calcul et déclarations d'impôts et des taxes) permettant de traiter de larges quantités de données en un temps restreint. L'informatique est donc aujourd'hui au centre de cette administration, autant pour les agents en interne que pour les utilisateurs externes.
+
+Le \gls{SI} est séparé en de nombreux bureaux (voir annexe \ref{orga_si}). Il comprend lui même des bureaux \glspl{transverse}
 
 \newpage
 \chapter{L'existant: le projet \texttt{analyse-logs}}
@@ -198,6 +203,6 @@ Cette administration, comme toute grande structure aujourd'hui, possède un beso
 
 \anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
 
-\anneximage{orga_si}{90}{Organigramme des bureaux du \gls{SI}}
+\anneximage{orga_si}{0}{Organigramme des bureaux du \gls{SI}}
 
 \end{document}
