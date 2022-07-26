@@ -1,4 +1,4 @@
-% Custom commands
+% Acronym with description
 \newcommand{\acronymdesc}[4]{
 	\newacronym[type=#1,description={#3~: #4}]{#2}{#2}{#3}
 }
@@ -29,11 +29,15 @@
 
 \acronymdesc{admin}{BSI-3}
 	{Bu\-reau du SI des pro\-fes\-sion\-nels}
-	{Bureau dépendant de la \gls{DPN}, chargé du développement et de la maintenance des applications du domaine de la fiscalité des professionnels}
+	{Auparavant nommé SI-1C, bureau dépendant de la \gls{DPN}, chargé du développement et de la maintenance des applications du domaine de la fiscalité des professionnels}
 
 \acronymdesc{admin}{MEDOC}
-	{ME-ca-ni-sa-tion Des Opé-ra-tions Comp-tables}
-	{Application traitant l'encaissements des taxes (telles que la TVA) ainsi que la génération d'écritures comptables pour l'État}
+	{ME\-ca\-ni\-sa\-tion Des Opé\-ra\-tions Comp\-tables}
+	{Application traitant l'encaissement des taxes (telles que la TVA) ainsi que la génération d'écritures comptables pour l'État}
+
+\acronymdesc{admin}{DTT}
+	{Di\-vi\-sion tech\-nique trans\-verse}
+	{Ancienne division du SI-1C (\gls{BSI-3} aujourd'hui) apportant un soutien technique aux autres équipes et proposant des projets d'innovation}
 
 \newglossaryentry{transverse}{
     name={trans\-ver\-se},
@@ -49,7 +53,7 @@
 \newglossaryentry{log}{
     name={log},
 	type=tech,
-    description={De l'anglais log (journal), sortie d'une application (souvent un fichier) représentant le chemin d'exécution d'une application}
+    description={De l'anglais log (journal), sortie d'une application (souvent un fichier) représentant le chemin d'exécution d'une application (voir section \ref{logs})}
 }
 
 \newglossaryentry{ml}{

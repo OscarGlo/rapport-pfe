@@ -13,7 +13,8 @@
 	citecolor = blue!30!black,
 	urlcolor = purple!40!black
 }
-\usepackage{todonotes}
+\usepackage[colorinlistoftodos]{todonotes}
+\setuptodonotes{inline, color=blue!40!red!20}
 % Bibliography
 \usepackage{cite}
 \bibliographystyle{plain}
@@ -21,7 +22,6 @@
 % Glossary
 \usepackage[toc,automake]{glossaries}
 \input{glos}
-\glsaddall[types={admin,tech}]
 \makeglossaries
 
 %%% Display packages
@@ -42,6 +42,7 @@
 	\addcontentsline{toc}{chapter}{#1}
 }
 
+% Easily include image in annexs
 \newcommand\anneximage[3]{
 	\begin{figure}
 		\centering
@@ -126,7 +127,7 @@ Les \glspl{log} sont une source importante de données détaillant le fonctionne
 \mainmatter
 \glsresetall
 \chapters{Introduction}
-\todo[inline]{1-2 pages}
+\todo{1-2 pages}
 
 Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi puis Léa. Cependant, les performances des algorithmes implémentés n'étant pas satisfaisantes, c'est ici que nait le sujet de ce PFE. Ce mémoire détaille le processus d'évolution de ce projet dans l'objectif d'amélioration des performances.
 
@@ -135,8 +136,6 @@ J'ai travaillé sur cette problématique en binôme avec Robin, un stagiaire en 
 
 \bigskip
 Ce sujet de PFE s'intègre dans la stratégie d'innovation du SI de la \gls{DGFiP}. L'objectif est de montrer l'efficacité de ces outils, pour mettre en valeur l'innovation et pousser leur utilisation au sein des bureaux. Dans ce cadre, une structure proche de celle d'un projet de recherche a été suivie. Pour cela, nous avons d'abord composé et étudié un état de l'art des algorithmes de détection d'anomalies existants. Ils utilisent pour la plupart des méthodes d'\gls{ml}, avec des algorithmes classiques ou de l'\gls{deep}.
-
-\cite{deeplog}
 
 \newpage
 \chapter{La DGFiP, administration en évolution constante}
@@ -154,12 +153,31 @@ Cette nouvelle hiérarchie date de 2021, où une réorganisation a eu lieu. En e
 
 \bigskip
 
-Le \gls{BSI-3} est un bureau de la \gls{DPN} chargé de la fiscalité des professionnels. Il a a sa charge une dizaine d'applications qu'il spécifie, développe et maintient. L'une d'entre elles est \gls{MEDOC} qui est une application d'encaissement d'impôts et de gestion de comptabilité de l'État. Le \gls{BSI-3} possède une mission particulière de modernisation de cette application, tâche très complexe étant donné son échelle et sa complexité.
+Le \gls{BSI-3} est un bureau de la \gls{DPN} chargé de la fiscalité des professionnels, dirigé par Alain Kerdoncuff. Il a a sa charge une dizaine d'applications qu'il spécifie, développe et maintient. L'une d'entre elles est \gls{MEDOC} qui est une application d'encaissement d'impôts et de gestion de comptabilité de l'État. Le \gls{BSI-3} possède une mission particulière de modernisation de cette application, tâche très complexe étant donné son échelle et sa complexité.
+
+Ce bureau était auparavant nommé SI-1C, et ses missions n'ont pas changé avec la réorganisation. Cependant, chacun des bureaux sont encore spécialisés en plusieurs divisions, chacune en charge de projets spécifiques. Ces divisions ont elle changé avec la réorganisation, notamment une en particulier qui a été supprimée, la \gls{DTT}. Cette dernière, chapeautée par Olivier Blanc (aussi mon tuteur) était à la fois une aide technique sur le domaine du logiciel, ainsi qu'une division détachée des projets principaux, permettant de mettre en avant des technologies innovantes et des projets expérimentaux.
+
+\todo{Parler de la cellule innovation?}
+\todo{Détailler avec des chiffres}
 
 \newpage
 \chapter{L'existant: le projet \texttt{analyse-logs}}
 
 \section{Contexte du projet}
+
+Si le premier chapitre peut mettre quoi que ce soit en avant, c'est bien le besoin très fort en informatique de la \gls{DGFiP}, rempli par le \gls{SI} et ses très nombreuses applications. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
+
+Une solution serait de former des équipes de maintenance au différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient a temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas donné que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
+
+\bigskip
+Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019.
+
+\section{Que sont les \glspl{log}~?}
+\label{logs}
+
+Le terme ``\gls{log}'' est tiré de l'anglais et signifie a l'origine ``journal'', tel un journal de voyage. Il décrit donc un document contenant une liste chronologique d'évènements datés, qui peuvent être utilisés pour reformer l'histoire de ce qui s'est passé. Ils sont utiles dans le cas d'un accident, comme par exemple les journaux décrivant les voyages d'explorateurs ou aujourd'hui les boites noires dans l'aviation.
+
+Les \glspl{log} informatiques découlent de cette définition, décrivant le chemin d'exécution d'une application, d'un site, ou même d'un système d'exploitation. Ces fichiers de \glspl{log} sont 
 
 \section{Blocs logiciels}
 
@@ -209,5 +227,7 @@ Le \gls{BSI-3} est un bureau de la \gls{DPN} chargé de la fiscalité des profes
 \anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
 
 \anneximage{orga_si}{0}{Organigramme des bureaux du \gls{SI}}
+
+\listoftodos
 
 \end{document}
