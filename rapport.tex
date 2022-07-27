@@ -1,7 +1,6 @@
 \documentclass[openany, 12pt]{memoir}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{hyphsubst}
 \usepackage[english, french]{babel}
 
 %%% Utility packages
@@ -16,11 +15,10 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \setuptodonotes{inline, color=blue!40!red!20}
 % Bibliography
-\usepackage{cite}
-\bibliographystyle{plain}
 \usepackage{tocbibind}
+\bibliographystyle{plain}
 % Glossary
-\usepackage[toc,automake]{glossaries}
+\usepackage[toc, automake]{glossaries}
 \input{glos}
 \makeglossaries
 
@@ -30,7 +28,7 @@
 \usepackage{xcolor}
 % Headers
 \setlength{\headheight}{16pt}
-% Font
+% Fonts
 \usepackage{helvet}
 \usepackage{inconsolata}
 \renewcommand{\familydefault}{\sfdefault}
@@ -42,11 +40,11 @@
 	\addcontentsline{toc}{chapter}{#1}
 }
 
-% Easily include image in annexs
+% Easily include image in annexes
 \newcommand\anneximage[3]{
 	\begin{figure}
 		\centering
-		\includegraphics[angle=#2,height=\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
+		\includegraphics[angle=#2,height=0.93\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
 		\caption{#3}
 		\label{#1}
 	\end{figure}
@@ -61,7 +59,7 @@
 \frontmatter
 {
 	% Header
-	\begin{minipage}{0.54\textwidth}
+	\begin{minipage}{0.5\textwidth}
 		\large
 		Mémoire de PFE
 		
@@ -172,12 +170,23 @@ Une solution serait de former des équipes de maintenance au différents logicie
 \bigskip
 Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019.
 
-\section{Que sont les \glspl{log}~?}
+\newpage
+\section{Que sont les logs~?}
 \label{logs}
 
-Le terme ``\gls{log}'' est tiré de l'anglais et signifie a l'origine ``journal'', tel un journal de voyage. Il décrit donc un document contenant une liste chronologique d'évènements datés, qui peuvent être utilisés pour reformer l'histoire de ce qui s'est passé. Ils sont utiles dans le cas d'un accident, comme par exemple les journaux décrivant les voyages d'explorateurs ou aujourd'hui les boites noires dans l'aviation.
+Le terme ``log'' est tiré de l'anglais et signifie a l'origine ``journal'', tel un journal de voyage. Il décrit donc un document contenant une liste chronologique d'évènements datés, qui peuvent être utilisés pour reformer l'histoire de ce qui s'est passé. Ils sont utiles dans le cas d'un accident, comme par exemple les journaux décrivant les voyages d'explorateurs ou aujourd'hui les boites noires dans l'aviation.
 
-Les \glspl{log} informatiques découlent de cette définition, décrivant le chemin d'exécution d'une application, d'un site, ou même d'un système d'exploitation. Ces fichiers de \glspl{log} sont 
+Les logs informatiques découlent de cette définition, décrivant le chemin d'exécution d'une application, d'un site, ou même d'un système d'exploitation. Ces fichiers de logs sont séparés en lignes de logs (souvent appelée un ``log'') qui contiennent des informations communes a chaque ligne, ainsi que le message de log qui est la partie variable. Les informations communes vont en général être au minimum la date, l'heure et le niveau du log. Le niveau représente la gravité de l'information présentée, en général décomposée de cette façon~:
+
+\begin{enumerate}
+	\setcounter{enumi}{-1}
+	\item \texttt{DEBUG}~: Log utile pour débugger l'application, qui sera en général utilisé par le développeur. Ce log ne devrait pas être trouvé dans des fichiers de logs d'un logiciel en production.
+	\item \texttt{INFO}~: Information sur le statut fonctionnel d'une application, qui peuvent être utiles et compréhensibles d'un point de vue métier.
+	\item \texttt{WARNING}~: Anomalie logicielle non bloquante pour l'application, peut être fonctionnelle ou logicielle mais ne nécessite pas d'action immédiate.
+	\item \texttt{ERROR}~: Anomalie logicielle bloquante, souvent un bloc logiciel qui cesse de fonctionner. Nécessite en général une intervention assez rapide, pour éviter d'autres erreurs au sein du système.
+\end{enumerate}
+
+Grâce a ces informations, un développeur (ou quelqu'un chargé de la maintenance) sera capable de retrouver les anomalies qui ont eu lieu ainsi que de remonter les causes de ces anomalies. C'est un processus en général assez manuel, qui nécessite souvent de comparer les logs et le code source, et où la recherche par mot clé peut s'avérer très utile.
 
 \section{Blocs logiciels}
 
@@ -225,7 +234,6 @@ Les \glspl{log} informatiques découlent de cette définition, décrivant le che
 \end{centerall}
 
 \anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
-
 \anneximage{orga_si}{0}{Organigramme des bureaux du \gls{SI}}
 
 \listoftodos
