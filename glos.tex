@@ -1,6 +1,6 @@
 % Acronym with description
 \newcommand{\acronymdesc}[4]{
-	\newacronym[type=#1,description={#3~: #4}]{#2}{#2}{#3}
+	\newacronym[type=#1,description={#3: #4}]{#2}{#2}{#3}
 }
 
 \newglossary[ad]{admin}{adm}{ado}{Glossaire administratif}
@@ -66,4 +66,10 @@
     name={ap\-pren\-tis\-sage pro\-fond},
 	type=tech,
     description={Branche de l'\gls{ml} se basant sur des réseaux de neurones artificiels, comportant plusieurs couches de traitement de données permettant d'extraire des caractéristiques complexes}
+}
+
+\newglossaryentry{LSTM}{
+    name={LSTM},
+	type=tech,
+    description={Long Short Term Memory (Longue mémoire à court terme): Type de réseau de neurones en \gls{deep} capable de retenir de l'information sur une longue durée}
 }

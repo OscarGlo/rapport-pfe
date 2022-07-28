@@ -14,6 +14,13 @@
 }
 \usepackage[colorinlistoftodos]{todonotes}
 \setuptodonotes{inline, color=blue!40!red!20}
+% Code
+\usepackage{listings}
+\lstset{
+	literate={é}{{\'e}}1,
+	basicstyle=\ttfamily,
+	tabsize=4
+}
 % Bibliography
 \usepackage{tocbibind}
 \bibliographystyle{plain}
@@ -168,7 +175,7 @@ Si le premier chapitre peut mettre quoi que ce soit en avant, c'est bien le beso
 Une solution serait de former des équipes de maintenance au différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient a temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas donné que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
 
 \bigskip
-Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019.
+Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019. Léa Lebert à ensuite succédé à Rémi, puis un an après le départ de Léa j'ai repris le projet.
 
 \newpage
 \section{Que sont les logs~?}
@@ -176,25 +183,78 @@ Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai pr
 
 Le terme ``log'' est tiré de l'anglais et signifie a l'origine ``journal'', tel un journal de voyage. Il décrit donc un document contenant une liste chronologique d'évènements datés, qui peuvent être utilisés pour reformer l'histoire de ce qui s'est passé. Ils sont utiles dans le cas d'un accident, comme par exemple les journaux décrivant les voyages d'explorateurs ou aujourd'hui les boites noires dans l'aviation.
 
-Les logs informatiques découlent de cette définition, décrivant le chemin d'exécution d'une application, d'un site, ou même d'un système d'exploitation. Ces fichiers de logs sont séparés en lignes de logs (souvent appelée un ``log'') qui contiennent des informations communes a chaque ligne, ainsi que le message de log qui est la partie variable. Les informations communes vont en général être au minimum la date, l'heure et le niveau du log. Le niveau représente la gravité de l'information présentée, en général décomposée de cette façon~:
+Les logs informatiques découlent de cette définition, décrivant le chemin d'exécution d'une application, d'un site, ou même d'un système d'exploitation. Ces fichiers de logs sont séparés en lignes de logs (souvent appelée un ``log'') qui contiennent des informations communes a chaque ligne, ainsi que le message de log qui est la partie variable. Les informations communes vont en général être au minimum la date, l'heure et le niveau du log. Le niveau représente la gravité de l'information présentée, en général décomposée de cette façon:
 
 \begin{enumerate}
 	\setcounter{enumi}{-1}
-	\item \texttt{DEBUG}~: Log utile pour débugger l'application, qui sera en général utilisé par le développeur. Ce log ne devrait pas être trouvé dans des fichiers de logs d'un logiciel en production.
-	\item \texttt{INFO}~: Information sur le statut fonctionnel d'une application, qui peuvent être utiles et compréhensibles d'un point de vue métier.
-	\item \texttt{WARNING}~: Anomalie logicielle non bloquante pour l'application, peut être fonctionnelle ou logicielle mais ne nécessite pas d'action immédiate.
-	\item \texttt{ERROR}~: Anomalie logicielle bloquante, souvent un bloc logiciel qui cesse de fonctionner. Nécessite en général une intervention assez rapide, pour éviter d'autres erreurs au sein du système.
+	\item \texttt{DEBUG}: Log utile pour débugger l'application, qui sera en général utilisé par le développeur. Ce log ne devrait pas être trouvé dans des fichiers de logs d'un logiciel en production.
+	\item \texttt{INFO}: Information sur le statut fonctionnel d'une application, qui peuvent être utiles et compréhensibles d'un point de vue métier.
+	\item \texttt{WARNING}: Anomalie logicielle non bloquante pour l'application, peut être fonctionnelle ou logicielle mais ne nécessite pas d'action immédiate.
+	\item \texttt{ERROR}: Anomalie logicielle bloquante, souvent un bloc logiciel qui cesse de fonctionner. Nécessite en général une intervention assez rapide, pour éviter d'autres erreurs au sein du système.
 \end{enumerate}
 
 Grâce a ces informations, un développeur (ou quelqu'un chargé de la maintenance) sera capable de retrouver les anomalies qui ont eu lieu ainsi que de remonter les causes de ces anomalies. C'est un processus en général assez manuel, qui nécessite souvent de comparer les logs et le code source, et où la recherche par mot clé peut s'avérer très utile.
 
-\section{Blocs logiciels}
+\todo{Ajouter une section sur les réseaux de neurones?}
 
-\subsection{DeepLog}
+\section{Le modèle original: DeepLog}
 
-\subsection{Autres algorithmes}
+Le travail de Rémi qui a démarré ce projet a principalement été l'implémentation de l'algorithme DeepLog à partir du papier de Du et al. \cite{deeplog}. Je vais ici détailler le fonctionnement de DeepLog ainsi que l'implémentation qui a été faite par Rémi.
 
-\subsection{Blockly}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{images/deeplog.png}
+	\caption{Structure de DeepLog}
+	\label{deeplog}
+\end{figure}
+
+La structure complète du modèle est détaillée dans la figure \ref{deeplog}, tirée directement du papier. Une étape qui n'est pas détaillée ici est celle de la récupération et du regroupement des \glspl{log}, qui n'est pas aussi triviale qu'elle pourrait en avoir l'air. Cependant, ce point ne sera pas plus approfondi dans ce rapport étant donné que nous ne l'avons pas vraiment traité.
+
+\subsection{Parsing}
+
+La première étape est celle du ``parsing'' (que l'on pourrait approximativement traduire par analyse syntaxique en français). Elle est appliquée a un fichier de \glspl{log} pour le traduire en une liste d'ids et de vecteurs de paramètres. Par exemple, avec les \glspl{log} suivant:
+
+\begin{lstlisting}
+Session ouverte id 123
+Session ouverte id 456
+Session fermée id 123
+Session fermée id 456
+\end{lstlisting}
+
+On s'attend a obtenir un tel résultat parsé:
+
+\begin{lstlisting}
+1, [123]
+1, [456]
+2, [123]
+2, [456]
+\end{lstlisting}
+
+La méthode utilisée par DeepLog pour produire ces résultats est Spell \cite{spell}, développée l'année précédente par une partie des chercheurs qui ont travaillé sur DeepLog. Seulement, entre la publication du papier et l'implémentation par Rémi, 2 années sont passées, et l'état de l'art avait changé en faveur de l'algorithme Drain \cite{drain}. Cet algorithme avait été publié la même année que DeepLog, et est encore aujourd'hui une solution de choix pour le parsing de \glspl{log}. Rémi a donc produit sa propre implémentation de l'algorithme Drain pour le projet. Il existe aujourd'hui une très bonne implémentation open source de drain en Python, qui est donc plus robuste et performante que l'implémentation de Rémi, et nous allons donc la réutiliser plus tard.
+
+\subsection{Analyse des suites}
+
+L'étape d'analyse de Deeplog est séparée en deux parties. Les chercheurs de DeepLog avaient pour but de créer un modèle plus puissant que ce qui a pu exister auparavant. Un des problèmes de ces anciens modèles est l'absence de prise en compte de la temporalité, les \glspl{log} étant seulement analysés un par un sans prendre en compte leur ordre d'apparition. L'analyse de l'enchaînement des \glspl{log} est donc très importante pour mieux comprendre certaines erreurs moins évidentes à premier abord.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/stacked_lstm.png}
+	\caption{Structure d'un réseau \gls{LSTM} empilé}
+	\label{lstm}
+\end{figure}
+
+L'analyse temporelle est faite par DeepLog à l'aide de réseaux \gls{LSTM} empilés (voir figure \ref{lstm}). Un \gls{LSTM} est un type de réseau de neurones en \gls{deep}, qui possède des connections de rétroaction qui lui permettent de capturer des comportements sur une durée relativement longue.
+
+Les ids des \glspl{log} sont utilisés, et on entraine le modèle à prédire les $g$ \glspl{log} les plus probables qui apparaitraient après une suite de $h$ \glspl{log}, à l'aide d'une fenêtre glissante. Par exemple, pour cet enchainement d'ids: \texttt{1, 2, 1, 3, 4, 1, 2}, avec une taille de fenêtre $h=5$, on va envoyer \texttt{1, 2, 1, 3, 4} au réseau, et on s'attend a voir \texttt{1} au sein des $g$ \glspl{log} prédits. Ensuite on enverrait \texttt{2, 1, 3, 4, 1} en attendant \texttt{2}, etc.
+
+\bigskip
+Cet entraînement pourra ensuite être utilisé durant l'analyse d'un fichier de \glspl{log}, ou même durant son exécution. On prévoit les $g$ ids les plus probables, puis on compare avec le \gls{log} qui est vraiment à la suite. Si son id n'est pas dans les prédictions de l'algorithme, on considère ce log comme anormal.
+
+\subsection{Analyse des paramètres}
+
+%\subsection{Autres algorithmes}
+%
+%\subsection{Blockly}
 
 \newpage
 \chapter{Le processus scientifique au cœur du projet}
