@@ -234,7 +234,7 @@ La méthode utilisée par DeepLog pour produire ces résultats est Spell \cite{s
 
 \subsection{Analyse des suites}
 
-L'étape d'analyse de Deeplog est séparée en deux parties. Les chercheurs de DeepLog avaient pour but de créer un modèle plus puissant que ce qui a pu exister auparavant. Un des problèmes de ces anciens modèles est l'absence de prise en compte de la temporalité, les \glspl{log} étant seulement analysés un par un sans prendre en compte leur ordre d'apparition. L'analyse de l'enchaînement des \glspl{log} est donc très importante pour mieux comprendre certaines erreurs moins évidentes à premier abord.
+L'étape d'analyse de DeepLog est séparée en deux parties. Les chercheurs de DeepLog avaient pour but de créer un modèle plus puissant que ce qui a pu exister auparavant. Un des problèmes de ces anciens modèles est l'absence de prise en compte de la temporalité, les \glspl{log} étant seulement analysés un par un sans prendre en compte leur ordre d'apparition. L'analyse de l'enchaînement des \glspl{log} est donc très importante pour mieux comprendre certaines erreurs moins évidentes à premier abord.
 
 \begin{figure}[ht]
 	\centering
@@ -251,6 +251,8 @@ Les ids des \glspl{log} sont utilisés, et on entraine le modèle à prédire le
 Cet entraînement pourra ensuite être utilisé durant l'analyse d'un fichier de \glspl{log}, ou même durant son exécution. On prévoit les $g$ ids les plus probables, puis on compare avec le \gls{log} qui est vraiment à la suite. Si son id n'est pas dans les prédictions de l'algorithme, on considère ce log comme anormal.
 
 \subsection{Analyse des paramètres}
+
+Le choix des créateurs de DeepLog a été de considérer chaque partie variable des \glspl{log} (soit chaque paramètre) comme sa propre série temporelle à travers les \glspl{log} de même id. En faisant cela, il est possible de réutiliser la même architecture de \gls{LSTM} empilés détaillés a la figure \ref{lstm}. Cette fois, on attend une unique prédiction de valeur, et les lignes sont considérées comme anormales si la valeur observée est trop différente de la valeur réelle.
 
 %\subsection{Autres algorithmes}
 %
