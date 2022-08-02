@@ -13,7 +13,7 @@
 	urlcolor = purple!40!black
 }
 \usepackage[colorinlistoftodos]{todonotes}
-\setuptodonotes{inline, color=blue!40!red!20}
+\presetkeys{todonotes}{inline, color=blue!40!red!20}{}
 % Code
 \usepackage{listings}
 \lstset{
@@ -254,9 +254,31 @@ Cet entraînement pourra ensuite être utilisé durant l'analyse d'un fichier de
 
 Le choix des créateurs de DeepLog a été de considérer chaque partie variable des \glspl{log} (soit chaque paramètre) comme sa propre série temporelle à travers les \glspl{log} de même id. En faisant cela, il est possible de réutiliser la même architecture de \gls{LSTM} empilés détaillés a la figure \ref{lstm}. Cette fois, on attend une unique prédiction de valeur, et les lignes sont considérées comme anormales si la valeur observée est trop différente de la valeur réelle.
 
-%\subsection{Autres algorithmes}
-%
-%\subsection{Blockly}
+\section{Evolutions du projet par Léa}
+
+Suite à l'implémentation de DeepLog par Rémi, le projet était certe fonctionnel mais très peu utilisable par un utilisateur lambda. En effet, l'utilisation se faisait à travers une ligne de commande comportant de nombreux paramètres, celle-ci étant la seule interface pour les utilisateurs.
+
+Le travail de Léa a donc été d'améliorer ce projet pour le rendre plus simple d'utilisation, mais aussi d'agrandir l'éventail de possibilités d'analyse proposé. Il a été choisi de créer une nouvelle façon de faire l'interface avec le modèle via la bibliothèque Blockly créée par Google, détaillée à la suite. Je ferai aussi une explication des autres algorithmes mis en place, sur quoi j'avais aidé Léa au moment de son PFE.
+
+\subsection{Blockly}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/blockly.png}
+	\caption{Exemple de programme avec Blockly}
+	\label{blockly}
+\end{figure}
+
+Blockly est une librairie publiée par Google, permettant de créer des éditeurs de code visuels. L'utilisateur relie des blocs qui représentent des instructions, des variables, des boucles (voir figure \ref{blockly}) et cette représentation est traduite en code, de façon entièrement configurable par un développeur. Si vous avez déjà eu affaire au moteur de jeu en ligne Scratch, son éditeur visuel est basé sur Blockly.
+
+\bigskip
+Olivier et Léa ont fait le choix d'utiliser cette librairie pour représenter les différentes structures de modèles, ou ``pipelines''. En effet, si on considère chaque bloc du modèle, il est possible de les remplacer par d'autres blocs équivalents, par exemple un autre analyseur de modèle. Blockly permet très bien cette représentation, avec des couleurs et des formes qui correspondent aux types des éléments. Chaque étape du modèle pourrait alors avoir son type de bloc, et l'interface serait visuellement très intuitive.
+
+L'interface Blockly a donc été développée par dessus le travail de Rémi, mais aussi avec les autres algorithmes détaillés dans la partie suivante. Elle n'aurait eu que peu d'intérêt si l'idée d'algorithmes/modèles alternatifs n'avait pas été émise, mais cette idée permet de créer facilement et intuitivement des modèles adaptés aux besoins de différentes applications de la DGFiP.
+
+\subsection{Algorithmes alternatifs}
+
+
 
 \newpage
 \chapter{Le processus scientifique au cœur du projet}
