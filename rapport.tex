@@ -40,7 +40,8 @@
 \usepackage{fontawesome}
 % Header
 \usepackage{fancyhdr}
-\setlength{\headsep}{20pt}
+\setlength{\headheight}{16pt}
+\setlength{\headsep}{10pt}
 \lhead{\textit{\leftmark}}
 \rhead{}
 \fancyfoot[C]{\textsf{\thepage}}
@@ -309,19 +310,45 @@ Je vais détailler au sein de ce chapitre cette grande partie du projet et les d
 
 \section{État de l'art de l'analyse de logs}
 
+À l'arrivée de Robin au bureaux, j'étais encore en période école. Il a donc commencé le travail sur le projet avant moi, et ce en commençant la rédaction d'un état de l'art des algorithmes d'analyse de \glspl{log} existants. Ce travail est un travail de longue haleine, la compréhension des papiers n'étant pas du tout triviale. Malgré les meilleurs efforts des chercheurs les ayant rédigés, un long travail de documentation et d'apprentissage est nécessaire pour comprendre certains des concepts abordés et utilisés.
+
+Un papier qui a beaucoup aidé cette recherche documentaire est le rapport d'expérience \cite{experiencereport} publié par Huawei et l'université de Hong Kong en 2021. Ce document étant très récent, étant publié environ 6 mois avant le début du projet, il nous a semblé être une source fiable d'informations et de données au sujet de la détection d'anomalies dans les logs. Il compare notamment DeepLog à cinq autres méthodes, pour un total de trois méthodes (semi-)supervisées et trois non-supervisées.
+
+Nous avons eu beaucoup d'échanges avec Robin durant ses recherches documentaires, au sujet des algorithmes trouvés, de détails incompris ou de points intéressant. Nous avons pu comme cela mieux comprendre les différents papiers trouvés, et faire des choix et des hypothèses au sujet de l'implémentation et des résultats.
+
+\bigskip
+Cette recherche nous a mené à choisir les algorithmes que nous souhaitions implémenter pour la suite
+
 \section{Analyse des jeux de données disponibles}
+
+\newpage 
+\chapter{Organisation du projet}
+
+\todo{Partie orga}
+
+\section{La planification et les aléas}
+
+\todo{Difficulté de planifier un projet de recherche, évolutions du planning, aléas rencontrés}
 
 \section{Agilité et recherche: une union difficile}
 
+\todo{Agilité pas mise en place, pourquoi?}
+
 \newpage
 \chapter{Développement du nouveau projet}
+
+\todo{Technique}
 
 \newpage
 \chapter{Projection de l'impact du projet}
 
 \section{Gain de temps et de productivité}
 
+\todo{Partie éco}
+
 \section{L'humain contre l'algorithme}
+
+\todo{Partie humaine}
 
 \newpage
 \chapters{Conclusion}
