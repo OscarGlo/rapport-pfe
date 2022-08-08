@@ -33,18 +33,27 @@
 \usepackage{graphicx}
 \usepackage{fullpage}
 \usepackage{xcolor}
-% Headers
-\setlength{\headheight}{16pt}
 % Fonts
 \usepackage{helvet}
 \usepackage{inconsolata}
 \renewcommand{\familydefault}{\sfdefault}
+\usepackage{fontawesome}
+% Header
+\usepackage{fancyhdr}
+\setlength{\headsep}{20pt}
+\lhead{\textit{\leftmark}}
+\rhead{}
+\fancyfoot[C]{\textsf{\thepage}}
 
 %%% Custom commands
 % Unnumbered in toc
 \newcommand\chapters[1]{
 	\chapter*{#1}
 	\addcontentsline{toc}{chapter}{#1}
+}
+
+\newcommand\link[2]{
+	\href{#1}{#2 {\small\faExternalLink}}
 }
 
 % Easily include image in annexes
@@ -130,6 +139,7 @@ Les \glspl{log} sont une source importante de données détaillant le fonctionne
 
 % Main content
 \mainmatter
+\pagestyle{fancy}
 \glsresetall
 \chapters{Introduction}
 \todo{1-2 pages}
@@ -195,6 +205,7 @@ Les logs informatiques découlent de cette définition, décrivant le chemin d'e
 
 Grâce a ces informations, un développeur (ou quelqu'un chargé de la maintenance) sera capable de retrouver les anomalies qui ont eu lieu ainsi que de remonter les causes de ces anomalies. C'est un processus en général assez manuel, qui nécessite souvent de comparer les logs et le code source, et où la recherche par mot clé peut s'avérer très utile.
 
+\todo{Déplacer dans un chapitre `notions'?}
 \todo{Ajouter une section sur les réseaux de neurones?}
 
 \section{Le modèle original: DeepLog}
@@ -278,22 +289,39 @@ L'interface Blockly a donc été développée par dessus le travail de Rémi, ma
 
 \subsection{Algorithmes alternatifs}
 
+Il existe de nombreux algorithmes qui, a partir de suites d'ids ou de paramètres, seraient capables de prévoir la validité d'une occurrence suivante. En effet, une partie de la force de DeepLog repose dans son architecture très modulaire, et il serait donc envisageable de remplacer une étape par une autre similaire.
 
+Le premier algorithme qui a été choisi est les ``forêts d'isolation'' \cite{isolationforest}, qui se base sur une valeur d'isolation d'un point de données: plus il est facile de le séparer du reste des données, plus il a de chances d'être une anomalie (voir \link{https://en.wikipedia.org/wiki/Isolation_forest}{article wikipedia} pour une explication simple). Un module d'analyse de paramètre a été développé avec une implémentation des forêts d'isolation, capable de remplacer celui de DeepLog dans l'implémentation de Rémi.
+
+\bigskip
+C'est ici que j'ai eu mon premier contact avec le projet durant ma première année d'alternance. Il m'a fallu assister Léa sur la fin de son PFE, pour effectuer des tâches qu'elle n'avait pas le temps de faire. J'ai aussi pu apporter une aide technique sur la partie \gls{ml} du projet, étant suite a avoir suivi un cours a ce sujet.
+
+En m'inspirant de ce qui a été fait sur les forêts d'isolation, j'ai fait le choix de créer un module d'analyse de suites et de paramètres générique basé sur la librairie d'\gls{ml} scikit learn. C'est une bibliothèque libre présentant de nombreux algorithmes communs d'\gls{ml}, tels que les forêts d'isolation. Utiliser une librairie telle que scikit me permet tout d'abord une meilleure robustesse et performance des algorithmes, mais aussi une certaine généricité. En effet, les algorithmes du même type ont tous la même structure de fonctions, et cela permet de très facilement les interchanger.
+
+Les modules qui ont été développés permettent donc de remplacer l'analyse de paramètres de DeepLog par n'importe quel algorithme de la bibliothèque scikit, s'intégrant parfaitement dans la structure par blocs proposée par Blockly. Trois algorithmes de détections d'anomalies ont été retenus: les forêts d'isolation (version scikit), les SVM (Support Vector Model, ou \link{https://fr.wikipedia.org/wiki/Machine_à_vecteurs_de_support}{Séparateur à Vaste Marge}) à une classe, et les LOF (\link{https://en.wikipedia.org/wiki/Local_outlier_factor}{Local Outlier Factor}). Ce sont trois méthodes de l'état de l'art en apprentissage non profond pour la détection d'anomalie, qui pourraient s'avérer utiles pour l'analyse de paramètres en particulier.
 
 \newpage
 \chapter{Le processus scientifique au cœur du projet}
+
+Nous arrivons maintenant au cœur de ce mémoire, qui démarre au début de mon PFE, et plus précisément l'arrivée de Robin à la \gls{DGFiP}. Robin était étudiant en Master ALMA à l'université de Nantes, et a travaillé avec moi sur le projet d'analyse de \glspl{log} en tant que sujet de stage de fin de master. Il s'est chargé de beaucoup de travail de documentation sur le sujet ainsi que des sujets plus axés recherche.
+
+Je vais détailler au sein de ce chapitre cette grande partie du projet et les différents points important que nous avons rencontrés.
 
 \section{État de l'art de l'analyse de logs}
 
 \section{Analyse des jeux de données disponibles}
 
-\section{Organisation des tâches}
+\section{Agilité et recherche: une union difficile}
 
 \newpage
 \chapter{Développement du nouveau projet}
 
 \newpage
 \chapter{Projection de l'impact du projet}
+
+\section{Gain de temps et de productivité}
+
+\section{L'humain contre l'algorithme}
 
 \newpage
 \chapters{Conclusion}
