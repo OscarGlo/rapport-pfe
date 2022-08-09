@@ -1,4 +1,4 @@
-\documentclass[openany, 12pt]{memoir}
+\documentclass[openany, 11pt]{memoir}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english, french]{babel}
@@ -45,6 +45,8 @@
 \lhead{\textit{\leftmark}}
 \rhead{}
 \fancyfoot[C]{\textsf{\thepage}}
+% Spacing
+\linespread{1.2}
 
 %%% Custom commands
 % Unnumbered in toc
@@ -77,7 +79,7 @@
 {
 	% Header
 	\begin{minipage}{0.5\textwidth}
-		\large
+		\Large
 		Mémoire de PFE
 		
 		\vspace{10pt}
@@ -94,12 +96,12 @@
 	% Title
 	\centering
     \begin{minipage}{\textwidth}
-        \centering
+        \centering \LARGE
         \vspace{20pt}
-        \Large \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
+        \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
         
         \vspace{5pt}
-        \Large Oscar Gloaguen
+        Oscar Gloaguen
         
         \vspace{60pt}
         Direction Générale des Finances Publiques
@@ -155,6 +157,7 @@ Ce sujet de PFE s'intègre dans la stratégie d'innovation du SI de la \gls{DGFi
 
 \newpage
 \chapter{La DGFiP, administration en évolution constante}
+\label{dgfip}
 La \gls{DGFiP} est une administration française née de la fusion de la Direction \gls{DGI} et de la \gls{DGCP} en 2008. Elle hérite alors des missions des deux entités, en faisant un service public très étendu, en charge notamment de la collecte des impôts et taxes et de la législation fiscale. 
 
 Cette administration possède une hiérarchie forte séparée en 8 services, qui définit leur domaine de travail, ainsi que différentes directions (voir organigramme \ref{orga} en annexes). Une majorité des services sont des services métiers, directement en lien avec les missions de la \gls{DGFiP}, mais 3 de ces services sont des services support, ou \glspl{transverse}. Ces derniers sont le service des Ressources Humaines, le service de Stratégie, Pilotage et Budget, et le \gls{SI}. Malgré une interaction indirecte avec le domaine métier des dinances publiques, ils répondent aux besoins de la \gls{DGFiP} en permettant le bon fonctionnement des autres services, ou même en améliorant leur performance.
@@ -310,7 +313,7 @@ Je vais détailler au sein de ce chapitre cette grande partie du projet et les d
 
 \section{État de l'art de l'analyse de logs}
 
-À l'arrivée de Robin au bureaux, j'étais encore en période école. Il a donc commencé le travail sur le projet avant moi, et ce en commençant la rédaction d'un état de l'art des algorithmes d'analyse de \glspl{log} existants. Ce travail est un travail de longue haleine, la compréhension des papiers n'étant pas du tout triviale. Malgré les meilleurs efforts des chercheurs les ayant rédigés, un long travail de documentation et d'apprentissage est nécessaire pour comprendre certains des concepts abordés et utilisés.
+À l'arrivée de Robin au bureau, j'étais encore en période école. Il a donc commencé le travail sur le projet avant moi, et ce en commençant la rédaction d'un état de l'art des algorithmes d'analyse de \glspl{log} existants. Ce travail est un travail de longue haleine, la compréhension des papiers n'étant pas du tout triviale. Malgré les meilleurs efforts des chercheurs les ayant rédigés, un long travail de documentation et d'apprentissage est nécessaire pour comprendre certains des concepts abordés et utilisés.
 
 Un papier qui a beaucoup aidé cette recherche documentaire est le rapport d'expérience \cite{experiencereport} publié par Huawei et l'université de Hong Kong en 2021. Ce document étant très récent, étant publié environ 6 mois avant le début du projet, il nous a semblé être une source fiable d'informations et de données au sujet de la détection d'anomalies dans les logs. Il compare notamment DeepLog à cinq autres méthodes, pour un total de trois méthodes (semi-)supervisées et trois non-supervisées.
 
@@ -321,7 +324,66 @@ Cette recherche nous a mené à choisir les algorithmes que nous souhaitions imp
 
 \section{Analyse des jeux de données disponibles}
 
-\newpage 
+Nous avons réussi à obtenir un large jeu de données de \glspl{log} de l'application \gls{MEDOC} dont j'ai parlé succinctement dans la section \ref{dgfip}. Elle produit une grosse quantité de \glspl{log} liés notamment aux parcours utilisateurs durant leur sessions sur l'application. Voici un exemple de \gls{log} tiré de ce jeu de données:
+
+\begin{lstlisting}
+2021-05-14 07:35:17,106 - http-bio-8140-exec-32 - INFO -
+| fr.gouv.finances.medoc.persistance.cpl.dao.VerrouDao.
+| leverVerrousUtilisateur(VerrouDao.java:167) - 0 Supprimés pour
+| la session SERV0070100-AG323056-0DB4EE01F8D31E5C4D2EE3BDA6131B62
+\end{lstlisting}
+
+On retrouve ici les différents éléments abordés dans la section \ref{logs}, tels que la date, l'heure et le niveau du \gls{log}. Seulement, on retrouve aussi des informations supplémentaires telles que le fil d'exécution, la classe et la méthode d'origine. Ce sont des informations supplémentaires qui peuvent être très utiles à un développeur pour tracer l'origine d'une erreur.
+
+\bigskip
+De nombreux \glspl{log} comportent aussi un identifiant de session, par exemple le long identifiant lisible a la fin de la ligne d'exemple ci-dessus. La gestion des sessions est un point très important dans l'analyse de \glspl{log}, en particulier quand on prend en compte l'enchainement des \glspl{log} comme le font DeepLog et LogRobust. En effet, si les sessions se retrouvent entrelacées dans les \glspl{log}, les enchainements peuvent devenir imprévisibles, et une anomalie peut être détectée là où il n'y en a pas.
+
+Il existe plusieurs solutions à ce problème d'entrelacement:
+\begin{itemize}
+	\item[--] Désentrelacer les \glspl{log}: Si tous les \glspl{log} appartenant à des sessions différentes contiennent un identifiant de sessions et que son extraction est possible, il est possible de les désentrelacer. Il serait alors envisageable de traiter les sessions une par une, ou bien de les regrouper au sein même du flux des \glspl{log}.
+
+Cette solution pose certains problèmes qui nécessiterait des changements de structure des modèles, notamment pour la gestion de successions des \glspl{log} avec des heures qui ne se suivent pas.
+
+	\item[--] Augmenter la taille de l'historique: L'analyse se fait avec un historique de \glspl{log} d'une taille fixe, à partir du quel on prévoit le log suivant. Si cet historique est grand, précisément plus grand que la taille totale des sessions entrelacées, l'algorithme serait capable de ne prendre en compte que les \glspl{log} intéressants de cet historique. Cela est d'autant plus vrai pour un système implémentant un mécanisme d'attention.
+\end{itemize}
+
+La solution la plus évidente à mettre en place serait donc la seconde. Un point crucial est donc de connaitre ces tailles de session dans nos jeux de données de \gls{MEDOC}, et d'autres données tirées de ces \glspl{log} pourraient aussi nous être utiles.
+
+\bigskip
+Une analyse des données a donc été mise en place via un notebook Python Jupyter, comme nous avions utilisé cet outil en cours pour ce même genre de tâches. Un notebook permet de séparer du code Python en différents blocs exécutables séquentiellement et séparément, ce qui est utile pour du traitement de données et des visualisations.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{images/longsess.png}
+	\caption{Longueur des sessions dans les \glspl{log} \gls{MEDOC}}
+	\label{longsess}
+\end{figure}
+
+La première donnée sortie de cette analyse est la longueur des sessions, entrelacées ou non pour permettre une comparaison (figure \ref{longsess}). Cette première analyse amène déjà beaucoup d'informations sur le comportement des sessions. D'abord, on observe de nombreuses sessions contenant un unique \gls{log}, ce qui est un peu suspect et qu'il faudra étudier par la suite. Ensuite, l'entrelacement des sessions est assez minime mais cause quand même une explosion de la longueur maximale de session: une session passe ici de moins de 100 lignes à elle seule, a 300 lignes quand entrelacée avec le reste des \gls{log}. Enfin, on observe aussi l'existence d'une session qui comporte plus de 1000 lignes quand désentrelacée.
+
+\bigskip
+Une analyse plus détaillée des sessions de 1 ligne nous indique qu'elles sont toute, sans exceptions, des sessions ``Catalina''. En effet, les autres sessions comportent toutes au minimum un message d'ouverture et de fermeture de session, et des traitements sont toujours effectués entre ces deux évènements. Mais que sont ces sessions Catalina? Catalina est un composant de Tomcat, le moteur de serveur utilisé à la DGFiP. Catalina est en fait l'implémentation du moteur de Tomcat, ou plus précisément des ``servlets'' Tomcat (voir article wikipédia \link{https://fr.wikipedia.org/wiki/Servlet}{Servlet} pour plus d'informations).
+
+Tout ce qu'il nous faut savoir, c'est que ces sessions ne sont pas très intéressantes à séparer du reste des logs. Heureusement, tous ces logs ont la même structure:
+
+\begin{lstlisting}
+2021-05-14 08:06:16,078 -
+| ContainerBackgroundProcessor[StandardEngine[Catalina]]
+| - INFO - fr.gouv.finances.commun.jee9.mapi.presentation.session.
+| BasicSessionListener.sessionDestroyed(BasicSessionListener.java:92)
+| - Destruction de session '<id>'
+\end{lstlisting}
+
+Ces logs sont les seuls logs originaires du fil d'exécution \texttt{ContainerBackgroundProcessor\allowbreak [Stan\-dard\allowbreak Engine[Catalina]]}, il est alors possible de s'en servir comme filtre et de retirer ces logs de l'analyse des sessions, présenté en figure \ref{longsesscata}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{images/longsesscata.png}
+	\caption{Longueur des sessions en retirant les logs Catalina}
+	\label{longsesscata}
+\end{figure}
+
+\newpage
 \chapter{Organisation du projet}
 
 \todo{Partie orga}
