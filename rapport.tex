@@ -317,7 +317,20 @@ Un papier qui a beaucoup aidé cette recherche documentaire est le rapport d'exp
 Nous avons eu beaucoup d'échanges avec Robin durant ses recherches documentaires, au sujet des algorithmes trouvés, de détails incompris ou de points intéressant. Nous avons pu comme cela mieux comprendre les différents papiers trouvés, et faire des choix et des hypothèses au sujet de l'implémentation et des résultats.
 
 \bigskip
-Cette recherche nous a mené à choisir les algorithmes que nous souhaitions implémenter pour la suite
+Cette recherche nous a mené à choisir les algorithmes que nous souhaitions implémenter pour la suite, que je vais détailler dans la suite de cette section. Nous avons choisi ces algorithmes en fonction de notre compréhension des mécanismes en jeu, de leur facilité d'implémentation perçue, ainsi que de leur utilité vis à vis de notre problème.
+
+\subsection{LogRobust}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.35\textwidth]{images/logrobust.png}
+	\caption{Structure de LogRobust}
+	\label{logrobust}
+\end{figure}
+
+LogRobust \cite{logrobust} est un modèle d'analyse de \glspl{log} qui montre des similarités avec DeepLog, publié en 2019. Comme son nom l'indique, l'objectif était de pallier aux problèmes des anciennes méthodes de l'état de l'art en proposant une solution robuste. L'architecture du modèle est détaillée sur la figure \ref{logrobust}.
+
+\subsection{AutoEncoder}
 
 \section{Analyse des jeux de données disponibles}
 
