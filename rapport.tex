@@ -180,18 +180,8 @@ Ce bureau était auparavant nommé SI-1C, et ses missions n'ont pas changé avec
 \todo{Détailler avec des chiffres}
 
 \newpage
-\chapter{L'existant: le projet \texttt{analyse-logs}}
+\chapter{Notions techniques}
 
-\section{Contexte du projet}
-
-Si le premier chapitre peut mettre quoi que ce soit en avant, c'est bien le besoin très fort en informatique de la \gls{DGFiP}, rempli par le \gls{SI} et ses très nombreuses applications. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
-
-Une solution serait de former des équipes de maintenance au différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient a temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas donné que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
-
-\bigskip
-Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019. Léa Lebert à ensuite succédé à Rémi, puis un an après le départ de Léa j'ai repris le projet.
-
-\newpage
 \section{Que sont les logs~?}
 \label{logs}
 
@@ -209,8 +199,51 @@ Les logs informatiques découlent de cette définition, décrivant le chemin d'e
 
 Grâce a ces informations, un développeur (ou quelqu'un chargé de la maintenance) sera capable de retrouver les anomalies qui ont eu lieu ainsi que de remonter les causes de ces anomalies. C'est un processus en général assez manuel, qui nécessite souvent de comparer les logs et le code source, et où la recherche par mot clé peut s'avérer très utile.
 
-\todo{Déplacer dans un chapitre `notions'?}
 \todo{Ajouter une section sur les réseaux de neurones?}
+
+\section{Vectorisation sémantique}
+\label{vectorisationsemantique}
+
+La vectorisation sémantique est un processus de traitement de texte permettant de traiter une chaine de mots et d'en tirer un ``vecteur sémantique'', qui encode la signification de cette phrase sous forme d'un certain nombre de valeurs numériques. Si ces vecteurs ne sont pas très utile à eux seuls, ils sont très utiles pour les comparer entre eux. Voici des exemples communs de ce qui est possible, en notant $v(mot)$ le vecteur sémantique d'un mot:
+
+\begin{equation}
+\begin{split}
+	v(homme) - v(femme) \simeq v(roi) - v(reine)\\
+	v(homme) - v(femme) + v(fille) \simeq v(garcon)
+\end{split}
+\end{equation}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/wordvec.png}
+	\caption{Exemple de relations entre vecteurs sémantiques}
+	\label{wordvec}
+\end{figure}
+
+Ces vecteurs sont générés par un processus relativement simple quand on connait les bases de l'\gls{ml}. Je vais brièvement expliquer ici deux méthodes, présentées en plus de détail dans le papier word2vec \cite{word2vec}. La figure \ref{word2vec} décrit les structures des modèles présentés, qui sont en fait symétriques l'un de l'autre.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{images/word2vec.png}
+	\caption{Architectures de vectorisation de word2vec}
+	\label{word2vec}
+\end{figure}
+
+Chacune de ces méthodes utilise les vecteurs sémantiques comme entrée et sortie du réseau, et au début de l'entrainement chaque mot est lié a un vecteur aléatoire. En utilisant un corpus de texte, un mot ainsi que les mots qui l'entourent sont utilisés pour améliorer les valeurs du vecteur du mot central. Pour le CBOW (Continuous Bag Of Words, ou sac de mots continu), le ``contexte'' autour du mot est donné, et on entraine le réseau a deviner le mot actuel. À l'inverse, pour le modèle skip gram, on donne le mot initial et on fait deviner les mots qui l'entourent.
+
+Cette méthode présente des résultats très concluants, et de nombreuses méthodes plus récentes s'en inspirent pour résoudre des problèmes similaires. Pour les utiliser en pratique, il n'est pas réellement nécessaire de refaire toute cette procédure d'entrainement. Il suffit de récupérer une sorte de dictionnaire, qui affecte a chaque mot son vecteur sémantique. Il existe de ces dictionnaires pour beaucoup de langages, et notamment en français (voir démonstration sur \href{http://nlp.polytechnique.fr/word2vec}{Polytechnique NLP}). IL est important de noter que certains contextes nécessiteraient de ré-entrainer un modèle, mais c'est très rare.
+
+\newpage
+\chapter{L'existant: le projet \texttt{analyse-logs}}
+
+\section{Contexte du projet}
+
+Si le premier chapitre peut mettre quoi que ce soit en avant, c'est bien le besoin très fort en informatique de la \gls{DGFiP}, rempli par le \gls{SI} et ses très nombreuses applications. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
+
+Une solution serait de former des équipes de maintenance au différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient a temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas donné que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
+
+\bigskip
+Il y a 4 ans, mon tuteur Olivier Blanc s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important, et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie suivante). Olivier mit en avant le papier de recherche DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme sujet de PFE de Rémi Grison, apprenti a la DGFiP en 2019. Léa Lebert à ensuite succédé à Rémi, puis un an après le départ de Léa j'ai repris le projet.
 
 \section{Le modèle original: DeepLog}
 
@@ -326,14 +359,23 @@ Cette recherche nous a mené à choisir les algorithmes que nous souhaitions imp
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.35\textwidth]{images/logrobust.png}
+	\includegraphics[width=0.4\textwidth]{images/logrobust.png}
 	\caption{Structure de LogRobust}
 	\label{logrobust}
 \end{figure}
 
 LogRobust \cite{logrobust} est un modèle d'analyse de \glspl{log} qui montre des similarités avec DeepLog, publié en 2019. Comme son nom l'indique, l'objectif était de pallier aux problèmes des anciennes méthodes de l'état de l'art en proposant une solution robuste. L'architecture du modèle est détaillée sur la figure \ref{logrobust}.
 
+\bigskip
+La plus grosse différence de ce modèle comparé à DeepLog est l'étape de vectorisation sémantique présente à la suite du parsing. Si DeepLog utilise les id de \glspl{log} et les valeurs des différents paramètres pour reconnaître les anomalies, LogRobust utilise la sémantique des \glspl{log} et leur enchaînement (voir section \ref{vectorisationsemantique} pour plus de détails). Cette analyse sémantique permet effectivement de lisser les valeurs utilisées, d'où la promesse de robustesse de l'algorithme. Des lignes ayant la même signification, par exemple un log dans lequel des synonymes ont été remplacés dans une mise à jour, resteront proche, et ne nécessiteront pas un ré-entrainement du modèle.
+
+\todo{Explication bilstm}
+
+\todo{Explication tests de robustesse}
+
 \subsection{AutoEncoder}
+
+\todo{Description autoencoder}
 
 \section{Analyse des jeux de données disponibles}
 
@@ -374,10 +416,19 @@ Une analyse des données a donc été mise en place via un notebook Python Jupyt
 
 La première donnée sortie de cette analyse est la longueur des sessions, entrelacées ou non pour permettre une comparaison (figure \ref{longsess}). Cette première analyse amène déjà beaucoup d'informations sur le comportement des sessions. D'abord, on observe de nombreuses sessions contenant un unique \gls{log}, ce qui est un peu suspect et qu'il faudra étudier par la suite. Ensuite, l'entrelacement des sessions est assez minime mais cause quand même une explosion de la longueur maximale de session: une session passe ici de moins de 100 lignes à elle seule, a 300 lignes quand entrelacée avec le reste des \gls{log}. Enfin, on observe aussi l'existence d'une session qui comporte plus de 1000 lignes quand désentrelacée.
 
-\bigskip
-Une analyse plus détaillée des sessions de 1 ligne nous indique qu'elles sont toute, sans exceptions, des sessions ``Catalina''. En effet, les autres sessions comportent toutes au minimum un message d'ouverture et de fermeture de session, et des traitements sont toujours effectués entre ces deux évènements. Mais que sont ces sessions Catalina? Catalina est un composant de Tomcat, le moteur de serveur utilisé à la DGFiP. Catalina est en fait l'implémentation du moteur de Tomcat, ou plus précisément des ``servlets'' Tomcat (voir article wikipédia \link{https://fr.wikipedia.org/wiki/Servlet}{Servlet} pour plus d'informations).
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/dureesess.png}
+	\caption{Durée des sessions}
+	\label{dureesess}
+\end{figure}
 
-Tout ce qu'il nous faut savoir, c'est que ces sessions ne sont pas très intéressantes à séparer du reste des logs. Heureusement, tous ces logs ont la même structure:
+Une autre analyse qui a été effectuée est celle de la durée dans le temps des sessions (voir figure \ref{dureesess}). On retrouve ici les sessions qui ne contiennent qu'un unique \gls{log}, et ont une durée nulle. Sinon, on peut observer que les sessions ont une durée très proche, autour de 2 minutes 10 secondes.
+
+\bigskip
+Une analyse plus détaillée des sessions de 1 ligne nous indique qu'elles sont toute, sans exceptions, des sessions ``Catalina''. En effet, les autres sessions comportent toutes au minimum un message d'ouverture et de fermeture de session, et des traitements sont toujours effectués entre ces deux évènements. Mais que sont ces sessions Catalina? Catalina est un composant de Tomcat, le moteur de serveur utilisé à la DGFiP. Catalina est en fait l'implémentation du moteur de Tomcat, ou plus précisément des ``servlets'' Tomcat (voir article wikipédia \link{https://fr.wikipedia.org/wiki/Servlet}{Servlet} pour plus d'informations). Ces \glspl{log} représentent des fermetures de sessions Catalina, qui ne sont a priori pas les mêmes que les sessions utilisateurs qui nous intéressent.
+
+Tout ce qu'il nous faut savoir, c'est que ces sessions ne sont pas très intéressantes à mettre à part du reste des \glspl{log}. Heureusement, tous ces \glspl{log} ont la même structure:
 
 \begin{lstlisting}
 2021-05-14 08:06:16,078 -
@@ -387,13 +438,22 @@ Tout ce qu'il nous faut savoir, c'est que ces sessions ne sont pas très intére
 | - Destruction de session '<id>'
 \end{lstlisting}
 
-Ces logs sont les seuls logs originaires du fil d'exécution \texttt{ContainerBackgroundProcessor\allowbreak [Stan\-dard\allowbreak Engine[Catalina]]}, il est alors possible de s'en servir comme filtre et de retirer ces logs de l'analyse des sessions, présenté en figure \ref{longsesscata}.
+Ce sont les seuls \glspl{log} originaires du fil d'exécution \texttt{ContainerBackgroundProcessor\allowbreak [Stan\-dard\allowbreak Engine[Catalina]]}, il est alors possible de s'en servir comme filtre et de retirer ces \glspl{log} de l'analyse des sessions, présenté en figure \ref{longsesscata}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/longsesscata.png}
-	\caption{Longueur des sessions en retirant les logs Catalina}
+	\caption{Longueur des sessions en retirant les \glspl{log} Catalina}
 	\label{longsesscata}
+\end{figure}
+
+Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le fichier de \glspl{log} utilisé n'est qu'un extrait de tout le jeu de données auquel nous avons accès, par souci de performance. Mais cette analyse nous permet quand même de détailler la structure des \glspl{log} avec lesquels nous devons travailler. La figure \ref{proportionsess} détaille les pourcentages de \glspl{log} appartenant a une session, ainsi qu'une session Catalina.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/proportionsess.png}
+	\caption{Proportions de \glspl{log} appartenant à des sessions}
+	\label{proportionsess}
 \end{figure}
 
 \newpage
