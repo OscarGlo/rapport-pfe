@@ -45,6 +45,10 @@
 \lhead{\textit{\leftmark}}
 \rhead{}
 \fancyfoot[C]{\textsf{\thepage}}
+% Lists
+\usepackage[shortlabels]{enumitem}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=--}
 % Spacing
 \linespread{1.2}
 
@@ -369,9 +373,39 @@ LogRobust \cite{logrobust} est un modèle d'analyse de \glspl{log} qui montre de
 \bigskip
 La plus grosse différence de ce modèle comparé à DeepLog est l'étape de vectorisation sémantique présente à la suite du parsing. Si DeepLog utilise les id de \glspl{log} et les valeurs des différents paramètres pour reconnaître les anomalies, LogRobust utilise la sémantique des \glspl{log} et leur enchaînement (voir section \ref{vectorisationsemantique} pour plus de détails). Cette analyse sémantique permet effectivement de lisser les valeurs utilisées, d'où la promesse de robustesse de l'algorithme. Des lignes ayant la même signification, par exemple un log dans lequel des synonymes ont été remplacés dans une mise à jour, resteront proche, et ne nécessiteront pas un ré-entrainement du modèle.
 
-\todo{Explication bilstm}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/bilstm.png}
+	\caption{Structure d'un \gls{LSTM} bidirectionnel}
+	\label{bilstm}
+\end{figure}
 
-\todo{Explication tests de robustesse}
+\bigskip
+Une autre différence notable comparé à DeepLog est l'utilisation d'un bi-\gls{LSTM} avec un mécanisme d'attention (voir figure \ref{bilstm}). Le fonctionnement d'un bi-\gls{LSTM} est similaire au \gls{LSTM} utilisé par DeepLog, mais on en utilise un dans le sens chronologique (comme DeepLog) et un dans le sens inverse, avec des entrées allant du futur vers le passé. Cela permet de rajouter un contexte temporel aux \glspl{log}, ce qui améliore en général les performances. Un problème posé par cette approche est la nécessité de connaitre un certain nombre d'entrées dans le futur, et dans le cas d'une analyse en direct un délai supplémentaire est alors nécessaire.
+
+Le mécanisme d'attention simule le concept d'attention humain. Par exemple, quand on lit une phrase, on est capable de savoir quel mots lus précédemment sont important relativement au mot que l'on lit maintenant. C'est ce que fait LogRobust avec les \glspl{log}, en apprenant au fur et à mesure quel \glspl{log} de l'historique sont importants vis à vis du log analysé.
+
+\bigskip
+La robustesse du modèle est testée en modifiant les fichiers de logs de différentes façons, de manière aléatoire:
+
+\begin{itemize}
+	\item En modifiant les clés des \glspl{log}:
+	\begin{itemize}
+		\item Ajout de mots et/ou de paramètres
+		\item Suppression de mots
+	\end{itemize}
+	\item En modifiant l'enchaînement des \glspl{log}:
+	\begin{itemize}
+		\item Suppression de \glspl{log}
+		\item Mélange de \glspl{log}
+		\item Duplication de \glspl{log}
+	\end{itemize}
+\end{itemize}
+
+Ces fichiers de \glspl{log} modifiés sont ensuite utilisés par les chercheurs pour évaluer la robustesse du modèle LogRobust. Comparé a des méthodes d'\gls{ml} classiques (non profond), les performances sont très concluantes. En effet, la méthode performe bien face à des niveaux d'injection jusqu'à 20\%, et l'attention est mise en valeur car elle permet de garder les résultats corrects à des niveaux d'injection élevés.
+
+\bigskip
+Cette méthode serait donc une très bonne méthode a implémenter pour être durable dans le temps. Il n'est pas nécessaire de la ré-entrainer fréquemment (ce qui pouvait être un problème avec DeepLog. Il est important de noter que cette méthode ne prend pas en compte les valeurs des paramètres des \glspl{log}, ce qui pourrait être un problème dans certains cas d'application. Mais la robustesse de la méthode liée a son mécanisme d'attention, ainsi que son architecture relativement simple, sont de bons arguments pour son utilisation.
 
 \subsection{AutoEncoder}
 
@@ -395,11 +429,11 @@ De nombreux \glspl{log} comportent aussi un identifiant de session, par exemple 
 
 Il existe plusieurs solutions à ce problème d'entrelacement:
 \begin{itemize}
-	\item[--] Désentrelacer les \glspl{log}: Si tous les \glspl{log} appartenant à des sessions différentes contiennent un identifiant de sessions et que son extraction est possible, il est possible de les désentrelacer. Il serait alors envisageable de traiter les sessions une par une, ou bien de les regrouper au sein même du flux des \glspl{log}.
+	\item Désentrelacer les \glspl{log}: Si tous les \glspl{log} appartenant à des sessions différentes contiennent un identifiant de sessions et que son extraction est possible, il est possible de les désentrelacer. Il serait alors envisageable de traiter les sessions une par une, ou bien de les regrouper au sein même du flux des \glspl{log}.
 
 Cette solution pose certains problèmes qui nécessiterait des changements de structure des modèles, notamment pour la gestion de successions des \glspl{log} avec des heures qui ne se suivent pas.
 
-	\item[--] Augmenter la taille de l'historique: L'analyse se fait avec un historique de \glspl{log} d'une taille fixe, à partir du quel on prévoit le log suivant. Si cet historique est grand, précisément plus grand que la taille totale des sessions entrelacées, l'algorithme serait capable de ne prendre en compte que les \glspl{log} intéressants de cet historique. Cela est d'autant plus vrai pour un système implémentant un mécanisme d'attention.
+	\item Augmenter la taille de l'historique: L'analyse se fait avec un historique de \glspl{log} d'une taille fixe, à partir du quel on prévoit le log suivant. Si cet historique est grand, précisément plus grand que la taille totale des sessions entrelacées, l'algorithme serait capable de ne prendre en compte que les \glspl{log} intéressants de cet historique. Cela est d'autant plus vrai pour un système implémentant un mécanisme d'attention.
 \end{itemize}
 
 La solution la plus évidente à mettre en place serait donc la seconde. Un point crucial est donc de connaitre ces tailles de session dans nos jeux de données de \gls{MEDOC}, et d'autres données tirées de ces \glspl{log} pourraient aussi nous être utiles.
