@@ -4,6 +4,8 @@
 \usepackage[english, french]{babel}
 
 %%% Utility packages
+% Lists
+\usepackage{titletoc}
 % Links
 \usepackage{hyperref}
 \hypersetup{
@@ -67,7 +69,7 @@
 \newcommand\anneximage[3]{
 	\begin{figure}
 		\centering
-		\includegraphics[angle=#2,height=0.93\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
+	    \includegraphics[angle=#2,height=0.93\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
 		\caption{#3}
 		\label{#1}
 	\end{figure}
@@ -80,45 +82,44 @@
 % DOCUMENT
 \begin{document}
 \frontmatter
-{
-	% Header
-	\begin{minipage}{0.5\textwidth}
-		\Large
-		Mémoire de PFE
-		
-		\vspace{10pt}
-		Formation FIL
-		
-		\vspace{10pt}
-		IMT Atlantique
-	\end{minipage}
-	\begin{minipage}{0.45\textwidth}
-		\raggedleft
-        \includegraphics[width=\textwidth]{images/header.png}
-	\end{minipage}
+\pagenumbering{gobble}
 
-	% Title
-	\centering
-    \begin{minipage}{\textwidth}
-        \centering \LARGE
-        \vspace{20pt}
-        \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
-        
-        \vspace{5pt}
-        Oscar Gloaguen
-        
-        \vspace{60pt}
-        Direction Générale des Finances Publiques
-    \end{minipage}
-    
-    % Logos
-    \begin{figure}[b]
-        \centering
-        \includegraphics[width=\textwidth]{images/logos.png}
-    \end{figure}
-}
+% Header
+\begin{minipage}{0.5\textwidth}
+	\Large
+	Mémoire de PFE
+	
+	\vspace{10pt}
+	Formation FIL
+	
+	\vspace{10pt}
+	IMT Atlantique
+\end{minipage}
+\begin{minipage}{0.45\textwidth} % Deco graphics
+	\includegraphics[width=\textwidth]{images/header.png}
+\end{minipage}
 
+% Title
+\begin{minipage}{\textwidth}
+    \centering \LARGE
+    \vspace{20pt}
+    \textbf{Amélioration des performances de détection automatique d'anomalies dans des logs applicatifs}
+	
+    \vspace{5pt}
+	Oscar Gloaguen
+	
+	\vspace{60pt}
+    Direction Générale des Finances Publiques
+\end{minipage}
+
+% Logos
+\vfill
+\includegraphics[width=\textwidth]{images/logos.png}
+
+\newpage
+\pagenumbering{roman}
 \tableofcontents
+\startlist[main]{lof}
 
 \newpage
 \chapters{Remerciements}
@@ -235,10 +236,35 @@ Ces vecteurs sont générés par un processus relativement simple quand on conna
 
 Chacune de ces méthodes utilise les vecteurs sémantiques comme entrée et sortie du réseau, et au début de l'entrainement chaque mot est lié a un vecteur aléatoire. En utilisant un corpus de texte, un mot ainsi que les mots qui l'entourent sont utilisés pour améliorer les valeurs du vecteur du mot central. Pour le CBOW (Continuous Bag Of Words, ou sac de mots continu), le ``contexte'' autour du mot est donné, et on entraine le réseau a deviner le mot actuel. À l'inverse, pour le modèle skip gram, on donne le mot initial et on fait deviner les mots qui l'entourent.
 
-Cette méthode présente des résultats très concluants, et de nombreuses méthodes plus récentes s'en inspirent pour résoudre des problèmes similaires. Pour les utiliser en pratique, il n'est pas réellement nécessaire de refaire toute cette procédure d'entrainement. Il suffit de récupérer une sorte de dictionnaire, qui affecte a chaque mot son vecteur sémantique. Il existe de ces dictionnaires pour beaucoup de langages, et notamment en français (voir démonstration sur \href{http://nlp.polytechnique.fr/word2vec}{Polytechnique NLP}). IL est important de noter que certains contextes nécessiteraient de ré-entrainer un modèle, mais c'est très rare.
+Cette méthode présente des résultats très concluants, et de nombreuses méthodes plus récentes s'en inspirent pour résoudre des problèmes similaires. Pour les utiliser en pratique, il n'est pas réellement nécessaire de refaire toute cette procédure d'entrainement. Il suffit de récupérer une sorte de dictionnaire, qui affecte a chaque mot son vecteur sémantique. Il existe de ces dictionnaires pour beaucoup de langages, et notamment en français. Il est important de noter que certains contextes nécessiteraient de ré-entrainer un modèle, mais c'est très rare.
+
+\todo{Tester fonctionnement \href{http://nlp.polytechnique.fr/word2vec}{Polytechnique NLP}}
+
+\section{Forêt d'isolation}
+
+La forêt d'isolation, décrite en 2009 \cite{isolationforest}, est une méthode d'\gls{ml} classique utilisée pour la détection de valeurs aberrantes. Elle fonctionne en déterminant un coefficient d'isolation pour chaque valeur d'un jeu de données, déterminée par la facilité a la séparer du reste des données.
+
+L'algorithme est exécuté de cette façon:
+
+\begin{enumerate}
+	\item On choisit aléatoirement une variable (exemple, $x$ ou $y$ en 2 dimensions)
+	\item On choisit une valeur de seuil aléatoire, entre le maximum et le minimum de cette variable dans les points non isolés
+	\item On sépare les points inférieurs et supérieurs a ce seuil
+	\item Si un point de donnée se retrouve isolé du reste, on ne le compte plus pour l'algorithme, et on mémorise le nombre de ``splits'' qu'il a fallu faire pour l'isoler
+	\item Si tous les points n'ont pas été isolés, on retourne à l'étape 1.
+\end{enumerate}
+
+A la fin de cette boucle, un score d'isolation compris entre 0 (valeur normale) et 1 (anomalie) est calculé en fonction du nombre de splits. L'algorithme utilisant de l'aléatoire, il est possible de l'exécuter plusieurs fois pour obtenir une valeur moyenne d'isolation pour chaque point. Un exemple de séparation pour un point normal et aberrant est montré en figure \ref{isoforest}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{images/isoforest.png}
+	\caption{Fonctionnement des forêts d'isolation}
+	\label{isoforest}
+\end{figure}
 
 \newpage
-\chapter{L'existant: le projet \texttt{analyse-logs}}
+\chapter{L'existant: le projet analyse-logs}
 
 \section{Contexte du projet}
 
@@ -291,7 +317,7 @@ L'étape d'analyse de DeepLog est séparée en deux parties. Les chercheurs de D
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.6\textwidth]{images/stacked_lstm.png}
-	\caption{Structure d'un réseau \gls{LSTM} empilé}
+	\caption{Structure d'un réseau LSTM empilé}
 	\label{lstm}
 \end{figure}
 
@@ -308,7 +334,7 @@ Le choix des créateurs de DeepLog a été de considérer chaque partie variable
 
 \section{Evolutions du projet par Léa}
 
-Suite à l'implémentation de DeepLog par Rémi, le projet était certe fonctionnel mais très peu utilisable par un utilisateur lambda. En effet, l'utilisation se faisait à travers une ligne de commande comportant de nombreux paramètres, celle-ci étant la seule interface pour les utilisateurs.
+Suite à l'implémentation de DeepLog par Rémi, le projet était certes fonctionnel mais très peu utilisable par un utilisateur lambda. En effet, l'utilisation se faisait à travers une ligne de commande comportant de nombreux paramètres, celle-ci étant la seule interface pour les utilisateurs.
 
 Le travail de Léa a donc été d'améliorer ce projet pour le rendre plus simple d'utilisation, mais aussi d'agrandir l'éventail de possibilités d'analyse proposé. Il a été choisi de créer une nouvelle façon de faire l'interface avec le modèle via la bibliothèque Blockly créée par Google, détaillée à la suite. Je ferai aussi une explication des autres algorithmes mis en place, sur quoi j'avais aidé Léa au moment de son PFE.
 
@@ -332,7 +358,7 @@ L'interface Blockly a donc été développée par dessus le travail de Rémi, ma
 
 Il existe de nombreux algorithmes qui, a partir de suites d'ids ou de paramètres, seraient capables de prévoir la validité d'une occurrence suivante. En effet, une partie de la force de DeepLog repose dans son architecture très modulaire, et il serait donc envisageable de remplacer une étape par une autre similaire.
 
-Le premier algorithme qui a été choisi est les ``forêts d'isolation'' \cite{isolationforest}, qui se base sur une valeur d'isolation d'un point de données: plus il est facile de le séparer du reste des données, plus il a de chances d'être une anomalie (voir \link{https://en.wikipedia.org/wiki/Isolation_forest}{article wikipedia} pour une explication simple). Un module d'analyse de paramètre a été développé avec une implémentation des forêts d'isolation, capable de remplacer celui de DeepLog dans l'implémentation de Rémi.
+Le premier algorithme qui a été choisi est les ``forêts d'isolation'' \cite{isolationforest}, qui se base sur une valeur d'isolation d'un point de données: plus il est facile de le séparer du reste des données, plus il a de chances d'être une anomalie (voir section \ref{isoforest}). Un module d'analyse de paramètre a été développé avec une implémentation des forêts d'isolation, capable de remplacer celui de DeepLog dans l'implémentation de Rémi.
 
 \bigskip
 C'est ici que j'ai eu mon premier contact avec le projet durant ma première année d'alternance. Il m'a fallu assister Léa sur la fin de son PFE, pour effectuer des tâches qu'elle n'avait pas le temps de faire. J'ai aussi pu apporter une aide technique sur la partie \gls{ml} du projet, étant suite a avoir suivi un cours a ce sujet.
@@ -376,7 +402,7 @@ La plus grosse différence de ce modèle comparé à DeepLog est l'étape de vec
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.6\textwidth]{images/bilstm.png}
-	\caption{Structure d'un \gls{LSTM} bidirectionnel}
+	\caption{Structure d'un LSTM bidirectionnel}
 	\label{bilstm}
 \end{figure}
 
@@ -409,7 +435,29 @@ Cette méthode serait donc une très bonne méthode a implémenter pour être du
 
 \subsection{AutoEncoder}
 
-\todo{Description autoencoder}
+Cette méthode publiée en 2020 \cite{autoencoder} est appelée ``AutoEncoder'' dans le reste du document, mais elle utilise en réalité 2 réseaux de type autoencoder ainsi que des forêts d'isolation.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/autoencoder.png}
+	\caption{Structure d'un réseau autoencoder}
+	\label{autoencoder}
+\end{figure}
+
+\bigskip
+Le plus important pour comprendre ce modèle est le fonctionnement d'un AutoEncoder. C'est encore une fois un réseau de neurone, avec une structure simple en ``double entonnoir'' (voir figure \ref{autoencoder}). L'objectif de cette structure est d'apprendre un encodage (et décodage) de données pour réduire la taille de cette donnée, avec une perte d'information minimale. La valeur encodée est donc ce que l'on va retrouver dans la couche cachée au centre du réseau, et notre apprentissage nous permet d'encoder et de décoder des données par la suite.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{images/modeleautoencoder.png}
+	\caption{Structure du modèle ``AutoEncoder''}
+	\label{modeleautoencoder}
+\end{figure}
+
+\bigskip
+La structure complète du modèle est détaillée dans la figure \ref{modeleautoencoder}. Le premier autoencoder est entrainé à encoder les \glspl{log}, soit en extraire les variables significatives. Ensuite, la forêt d'isolation fait une première passe de détection d'anomalies selon ces \glspl{log} encodés, ce qui à la fois accélère le processus et améliore la détection. Enfin, une seconde passe de détection d'anomalies est faite avec un second autoencoder, qui va récupérer à la fois les valeurs négatives détectées par la forêt d'isolation et les valeurs positives. Cette passe permet de déterminer et utiliser un seuil d'acceptation des \glspl{log}.
+
+C'est une structure très complexe, et je ne saurais décrire en détail les raisons de sa structure si particulière. Mais c'est une méthode qui n'est pas trop compliquée a mettre en place malgré tout, se basant sur des concepts bien connus et implémentés dans des librairies, qu'il suffit de composer. Les résultats détaillés dans le papier sont assez concluants, et les comparaisons du rapport d'expérience \cite{experiencereport} montrent qu'il est notamment très robuste pour des jeux de données avec beaucoup d'anomalies, ce qui n'est pas le cas des autres modèles.
 
 \section{Analyse des jeux de données disponibles}
 
@@ -444,7 +492,7 @@ Une analyse des données a donc été mise en place via un notebook Python Jupyt
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/longsess.png}
-	\caption{Longueur des sessions dans les \glspl{log} \gls{MEDOC}}
+	\caption{Longueur des sessions dans les logs MEDOC}
 	\label{longsess}
 \end{figure}
 
@@ -477,7 +525,7 @@ Ce sont les seuls \glspl{log} originaires du fil d'exécution \texttt{ContainerB
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/longsesscata.png}
-	\caption{Longueur des sessions en retirant les \glspl{log} Catalina}
+	\caption{Longueur des sessions en retirant les logs Catalina}
 	\label{longsesscata}
 \end{figure}
 
@@ -486,7 +534,7 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.4\textwidth]{images/proportionsess.png}
-	\caption{Proportions de \glspl{log} appartenant à des sessions}
+	\caption{Proportions de logs appartenant à des sessions}
 	\label{proportionsess}
 \end{figure}
 
@@ -522,10 +570,14 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 \newpage
 \chapters{Conclusion}
 
+\stoplist[main]{lof}
+
 % BIBLIOGRAPHIE
 \newpage
 \backmatter
 \pagenumbering{gobble}
+\pagestyle{plain}
+
 \bibliography{biblio}
 
 % GLOSSAIRES
@@ -533,13 +585,20 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 \newpage
 \printglossary[type=tech,nonumberlist]
 
+% FIGURES
+\newpage
+\printlist[main]{lof}{}{\chapters{Table des figures}}
+
+
 % ANNEXES
 \newpage
 \appendix
-\begin{centerall}
-	\textbf{\HUGE Annexes}
-	\addcontentsline{toc}{chapter}{Annexes}
-\end{centerall}
+
+\startlist[appendix]{lof}
+\printlist[appendix]{lof}{}{\chapters{Annexes}}
+
+\newpage
+\pagenumbering{Alph}
 
 \anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
 \anneximage{orga_si}{0}{Organigramme des bureaux du \gls{SI}}

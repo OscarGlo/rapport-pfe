@@ -12,6 +12,9 @@
 *.cb2
 .*.lb
 
+# Liste des figures:
+*.plf
+
 ## Intermediate documents:
 *.dvi
 *.xdv
