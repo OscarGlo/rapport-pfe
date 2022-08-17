@@ -69,7 +69,7 @@
 \newcommand\anneximage[3]{
 	\begin{figure}
 		\centering
-	    \includegraphics[angle=#2,height=0.93\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
+		 \includegraphics[angle=#2,height=0.93\textheight,width=\textwidth,keepaspectratio]{images/#1.png}
 		\caption{#3}
 		\label{#1}
 	\end{figure}
@@ -539,22 +539,51 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 \end{figure}
 
 \newpage
-\chapter{Organisation du projet}
-
-\todo{Partie orga}
-
-\section{La planification et les aléas}
-
-\todo{Difficulté de planifier un projet de recherche, évolutions du planning, aléas rencontrés}
-
-\section{Agilité et recherche: une union difficile}
-
-\todo{Agilité pas mise en place, pourquoi?}
-
-\newpage
 \chapter{Développement du nouveau projet}
 
 \todo{Technique}
+
+\newpage
+\chapter{Organisation du projet}
+
+\section{La planification et les aléas}
+
+Comme je l'ai mentionné plus haut, Robin a démarré son stage avant mon retour d'école. Il a donc fallu lui trouver des tâches à faire avant mon arrivée, afin d'utiliser efficacement tout le temps disponible pour le projet. Mon premier travail à donc été, avant la période d'école de Janvier, de faire une première planification des tâches, tout particulièrement sur la période de février.
+
+Ce premier planning effectué est disponible en annexe \ref{planning}. Différents points sont intéressants à noter à son sujet. Tout d'abord, la possibilité d'un stage à l'étranger était toujours envisagée, mais suite à une absence de réponse de l'entreprise que j'avais contacté, j'ai décidé de suivre l'exercice de remplacement à la place. Cela a permis de libérer du temps pour la réalisation du projet, ce qui est intéressant vu le temps limité que j'aurais eu sinon.
+
+J'aimerais aussi indiquer que les sprints définis dans ce planning étaient relativement libre dans leur contenu. L'idée principale était de développer, tester et comparer les algorithmes retenus pendant l'état de l'art tout en essayant de suivre un mode agile.
+
+\bigskip
+Notre méthode de travail avec Robin était très collaborative. Nous avons beaucoup discuté au fil du projet pour régler des problèmes, ou mieux comprendre des points particuliers. Nous avons eu très vite une bonne entente, et notre curiosité partagée vis à vis de la recherche et des sciences nous a permis de discuter de sujets très intéressants. Cette méthode collaborative est très intéressante dans le cadre d'un projet de recherche, car sa complexité était élevée, et nous n'aurions pas pu avancer aussi bien si on travaillait chacun de notre coté.
+
+\bigskip
+Le premier point qui va venir déranger le planning a été ma sous-estimation de la charge de travail liée à la partie académique du projet. En effet, la recherche peut être un processus lent et fastidieux. Dans le cadre de la méta-analyse (analyse de nombreux papiers de recherche pour en tirer des conclusions), ce n'est que plus vrai, nécessitant d'abord de trouver les bon papiers du domaine, puis de les comparer et en tirer des résultats.
+
+Cet allongement des tâches de Robin m'a permis de commencer le développement de la réécriture du projet, qui n'était pas du tout prévue dans le planning à l'origine. Cette réécriture me prendra beaucoup de temps, et cela décalera encore le planning.
+
+\todo{Point de mis parcours, organisation, planning 2, agilité pas mise en place = transition}
+
+\section{Les freins à l'agilité}
+
+L'agilité est une approche à la gestion de projet née du manifeste agile, basée sur 4 valeurs simples: (``>'' représente ``plutôt que'')
+
+\begin{itemize}
+	\item Individus et interactions > Processus et outils
+	\item Logiciel fonctionnel > Documentation exhaustive
+	\item Collaboration avec le client > Négociation contractuelle
+	\item Adaptation au changement > Exécution d'un plan
+\end{itemize}
+
+De ces points naissent différentes méthodes telles que Scrum, qui décrit un cadre plus précis sur la mise en place et la réalisation de cette gestion de projet. Des ``sprints'' sont mis en place, qui séparent le temps du projet en cycles courts itératifs (en moyenne autour de quelques semaines). A chaque sprint, différentes tâches sont attribuées aux développeurs, et une démonstration de ce qui a été réalisé est faite à la fin.
+
+\bigskip
+Les méthodes agiles s'appliquent très bien au développement informatique, et c'est majoritairement dans ce domaine qu'elles sont utilisées. Mais une étude publiée en 2013 \cite{obstacles} met en avant les différents facteurs qui peuvent freiner leur mise en place, et nous allons les détailler dans cette partie. Le papier met en avant le fait que ces freins à l'agilité sont en majorité causés par la culture et la structure trop traditionnelle des organisations concernées.
+
+\todo{Role du manager et prise de décision collective}
+\todo{Documentation?}
+\todo{Intégration du client}
+\todo{Formation des membres de l'équipe et autonomie}
 
 \newpage
 \chapter{Projection de l'impact du projet}
@@ -596,12 +625,12 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 
 \startlist[appendix]{lof}
 \printlist[appendix]{lof}{}{\chapters{Annexes}}
-
 \newpage
-\pagenumbering{Alph}
 
 \anneximage{orga}{90}{Organigramme des services de la \gls{DGFiP}}
 \anneximage{orga_si}{0}{Organigramme des bureaux du \gls{SI}}
+\anneximage{planning}{90}{Planning original du projet}
+\anneximage{planning2}{90}{Planning mis à jour au milieu du projet}
 
 \listoftodos
 
