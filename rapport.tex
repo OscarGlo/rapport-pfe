@@ -541,7 +541,29 @@ Une dernière analyse effectuée est celle de la composition des \glspl{log}. Le
 \newpage
 \chapter{Développement du nouveau projet}
 
-\todo{Technique}
+Durant la partie scientifique du projet, et ayant déjà travaillé sur le projet de Rémi et Léa, différents points d'évolutions sont devenus apparents. Le projet est très large, et il ressemble à un projet auquel on aurait rajouté des modules au fur et à mesure sans vraiment de planification au départ, ni de temps passé a repenser cette structure. Le problème qui se pose ici est celui de la dette technique, qui s'accumule sur les projets a grande échelle si elle n'est pas prise en compte.
+
+J'ai alors fait le choix de faire une réécriture du projet, et surtout de repenser entièrement son architecture. L'objectif était de la rendre flexible aux changements et surtout ajouts, pour permettre au projet de grandir et évoluer avec les différents projets qui l'utiliseraient dans le futur. Principalement, on doit être capable d'aisément ajouter des algorithmes différents proposant différentes analyses et caractéristiques, pour le futur du projet mais aussi et surtout pour pouvoir nous les implémenter et tester plus facilement.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/analyselogs.jpg}
+	\caption{Structure des modèles du projet original}
+	\label{analyselogs}
+\end{figure}
+
+La figure \ref{analyselogs} décrit la structure des modèles d'analyse des \glspl{log} dans le projet original. Elle est très similaire à celle de DeepLog (voir figure \ref{deeplog}), étant donné que le projet a été à l'origine simplement une implémentation de cet algorithme. Un problème se pose quand on souhaite implémenter des algorithmes différents de DeepLog dans leur architecture. C'est d'ailleurs pour cette raison que Léa n'a pas implémenté d'autres algorithmes, mais simplement certains des blocs fonctionnels dans cette structure.
+
+L'idée était donc de réécrire le projet, en partant non pas d'un algorithme en particulier mais d'une architecture permettant d'implémenter les différents algorithmes envisagés, et plus si nécessaire. Celle-ci devrait bien sûr inclure DeepLog, et donc la structure parseur $\rightarrow$ analyse suite / analyse paramètres doit être comprise dans l'architecture. En utilisant des structures de classes et d'héritage, beaucoup d'abstractions peuvent être faites.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/archireecriture.png}
+	\caption{Nouvelle architecture pour les modèles d'analyse}
+	\label{archireecriture}
+\end{figure}
+
+La figure \ref{archireecriture} détaille la structure de classe pour les modèles de la réécriture. On peut voir beaucoup de similarités avec la structure précédente, mais celle-ci est déjà plus formalisée, et surtout il est envisageable d'y rajouter des composants. Cela est dû a la séparation des types de modèles, ainsi que leur abstraction. Un modèle complet est capable de s'entrainer, d'analyser un fichier de \glspl{log}, et d'écouter des \glspl{log} en direct. On n'a pas besoin de connaitre son fonctionnement interne si on l'utilise juste à haut niveau. Ce principe est utilisé a tous les niveaux de l'architecture, par exemple pour la sauvegarde: tous les types de modèles, ainsi que les parseurs, doivent pouvoir êtres enregistrés et chargés, et c'est donc défini par l'interface ``\texttt{Sauvegarde}''.
 
 \newpage
 \chapter{Organisation du projet}
