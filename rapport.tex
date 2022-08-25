@@ -17,7 +17,7 @@
 	citecolor = blue!30!black,
 	urlcolor = purple!40!black
 }
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorinlistoftodos,disable]{todonotes}
 \presetkeys{todonotes}{inline, color=blue!40!red!20}{}
 % Code
 \usepackage{listings}
@@ -125,7 +125,7 @@ Je souhaite remercier la Direction Générale des Finances Publiques et tout par
 Je tiens a remercier personnellement Robin Gries, qui a su être un vrai coéquipier tout au long de ce projet malgré sa complexité.
 
 \bigskip
-Je voudrais aussi remercier IMT Atlantique ainsi que ses professeurs, et surtout mon tuteur pédagogique Thomas Ledoux qui s'est mis a ma disposition pour le PFE.
+Je voudrais aussi remercier IMT Atlantique ainsi que ses professeurs, et surtout mon tuteur pédagogique Thomas Ledoux qui s'est mis à ma disposition pour le PFE.
 
 \newpage
 \begin{abstract}
@@ -157,7 +157,7 @@ Les \glspl{log} sont une source importante de données détaillant le fonctionne
 \chapters{Introduction}
 \todo{1-2 pages}
 
-Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi Grison puis Léa Lebert. Cependant, le projet ayant été développé il y a déjà 3 ans, une question s'est posée sur l'évolution du domaine. De nouvelles recherche, et de nouveaux algorithmes ont été publiés entre temps, et pourraient faire évoluer le projet. C'est ici que nait le sujet de ce PFE. Ce mémoire détaille le processus d'évolution de ce projet dans l'objectif d'amélioration des performances.
+Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi Grison puis Léa Lebert. Cependant, le projet ayant été développé il y a déjà 3 ans, une question s'est posée sur l'évolution du domaine. De nouvelles recherche, et de nouveaux algorithmes ont été publiés entre temps, et pourraient faire évoluer le projet. C'est ici que nait le sujet de ce PFE. Ce mémoire détaille le processus d'évolution de ce projet dans l'objectif de le tenir à jour sur l'état de l'art.
 
 \bigskip
 J'ai travaillé sur cette problématique en binôme avec Robin Gries, un stagiaire en dernière année de master à l'université de Nantes. L'organisation du sujet entre nous ainsi que les bénéfices et difficultés à travailler en équipe seront expliquées dans ce document.
@@ -317,6 +317,7 @@ Il y a 4 ans, mon tuteur, Olivier Blanc, s'est penché sur la question. Le vrai 
 
 Rémi Grison, apprenti à la DGFiP en 2019, partant de cette idée, a trouvé le papier DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme son sujet de PFE. Léa Lebert à ensuite succédé à Rémi, puis, un an après le départ de Léa, j'ai repris le projet.
 
+\newpage
 \section{Le modèle original: DeepLog}
 
 Le travail de Rémi qui a démarré ce projet a principalement été l'implémentation de l'algorithme DeepLog à partir du papier de Du et al. \cite{deeplog}. Je vais ici détailler le fonctionnement de DeepLog ainsi que l'implémentation qui a été faite par Rémi.
@@ -374,6 +375,7 @@ Cet entraînement pourra ensuite être utilisé durant l'analyse d'un fichier de
 
 Le choix des créateurs de DeepLog a été de considérer chaque partie variable des \glspl{log} (soit chaque paramètre) comme sa propre série temporelle à travers les logs de même id. En faisant cela, il est possible de réutiliser la même architecture de \gls{LSTM} empilés détaillés à la figure \ref{lstm}. Cette fois, on attend une unique prédiction de valeur, et les lignes sont considérées comme anormales si la valeur observée est trop différente de la valeur réelle.
 
+\newpage
 \section{Evolutions du projet par Léa}
 
 Suite à l'implémentation de DeepLog par Rémi, le projet était certes fonctionnel mais très peu utilisable par un utilisateur lambda. En effet, l'utilisation se faisait à travers une ligne de commande comportant de nombreux paramètres, celle-ci étant la seule interface pour les utilisateurs.
@@ -389,10 +391,10 @@ Le travail de Léa a donc été d'améliorer ce projet pour le rendre plus simpl
 	\label{blockly}
 \end{figure}
 
-Blockly est une librairie publiée par Google, permettant de créer des éditeurs de code visuels. L'utilisateur relie des blocs qui représentent des instructions, des variables, des boucles (voir figure \ref{blockly}) et cette représentation est traduite en code, de façon entièrement configurable par un développeur. Si vous avez déjà eu affaire au moteur de programmation Scratch, son éditeur visuel est basé sur Blockly.
+Blockly est une bibliothèque publiée par Google, permettant de créer des éditeurs de code visuels. L'utilisateur relie des blocs qui représentent des instructions, des variables, des boucles (voir figure \ref{blockly}) et cette représentation est traduite en code, de façon entièrement configurable par un développeur. Si vous avez déjà eu affaire au moteur de programmation Scratch, son éditeur visuel est basé sur Blockly.
 
 \bigskip
-Olivier et Léa ont fait le choix d'utiliser cette librairie pour représenter les différentes structures de modèles, ou <<pipelines>>. En effet, si on considère chaque bloc du modèle, il est possible de les remplacer par d'autres blocs équivalents, par exemple un autre analyseur de modèle. Blockly permet très bien cette représentation, avec des couleurs et des formes qui correspondent aux types des éléments. Chaque étape du modèle pourrait alors avoir son type de bloc, et l'interface serait visuellement très intuitive.
+Olivier et Léa ont fait le choix d'utiliser cette bibliothèque pour représenter les différentes structures de modèles, ou <<pipelines>>. En effet, si on considère chaque bloc du modèle, il est possible de les remplacer par d'autres blocs équivalents, par exemple un autre analyseur de modèle. Blockly permet très bien cette représentation, avec des couleurs et des formes qui correspondent aux types des éléments. Chaque étape du modèle pourrait alors avoir son type de bloc, et l'interface serait visuellement très intuitive.
 
 L'interface Blockly a donc été développée par dessus le travail de Rémi, mais aussi avec les autres algorithmes détaillés dans la partie suivante. En plus de permettre la substitution des algorithmes par d'autres alternatives, il permet aussi de simplifier l'utilisation du projet pour les futurs utilisateurs. En effet, il est possible avec Blockly de facilement et intuitivement créer et tester des modèles, adaptés aux besoins des différentes applications de la \gls{DGFiP}. Un exemple de modèle construit avec l'interface blockly est présenté en figure \ref{blocklydeeplog}.
 
@@ -412,7 +414,7 @@ Le premier algorithme qui a été choisi est les <<forêts d'isolation>> \cite{i
 \bigskip
 C'est ici que j'ai eu mon premier contact avec le projet durant ma première année d'alternance. J'ai pu assister Léa sur la fin de son PFE, pour implémenter des nouveaux algorithmes au sein de l'architecture. J'ai aussi pu apporter une aide technique sur la partie \gls{ml} du projet après avoir suivi un MOOC à ce sujet.
 
-En m'inspirant de ce qui a été fait sur les forêts d'isolation, j'ai fait le choix de créer un module d'analyse de suites et de paramètres générique basé sur la librairie d'\gls{ml} scikit learn. C'est une bibliothèque libre présentant de nombreux algorithmes communs d'apprentissage automatique, tels que les forêts d'isolation. Utiliser une librairie telle que scikit me permet tout d'abord une meilleure robustesse et performance des algorithmes, mais aussi une certaine généricité. En effet, les algorithmes du même type ont tous la même structure de fonctions et cela permet très facilement de les interchanger.
+En m'inspirant de ce qui a été fait sur les forêts d'isolation, j'ai fait le choix de créer un module d'analyse de suites et de paramètres générique basé sur la bibliothèque d'\gls{ml} scikit learn. C'est une bibliothèque libre présentant de nombreux algorithmes communs d'apprentissage automatique, tels que les forêts d'isolation. Utiliser une bibliothèque telle que scikit me permet tout d'abord une meilleure robustesse et performance des algorithmes, mais aussi une certaine généricité. En effet, les algorithmes du même type ont tous la même structure de fonctions et cela permet très facilement de les interchanger.
 
 Les modules qui ont été développés permettent donc de remplacer l'analyse de paramètres de DeepLog par n'importe quel algorithme de la bibliothèque scikit, s'intégrant parfaitement dans la structure par blocs proposée par Blockly. Trois algorithmes de détections d'anomalies ont été retenus: les forêts d'isolation (version scikit), les SVM (Support Vector Model, ou \href{https://fr.wikipedia.org/wiki/Machine_à_vecteurs_de_support}{Séparateur à Vaste Marge}) à une classe, et les LOF (\href{https://en.wikipedia.org/wiki/Local_outlier_factor}{Local Outlier Factor}). Ce sont trois méthodes de l'état de l'art en apprentissage non profond pour la détection d'anomalie, qui pourraient s'avérer utiles pour l'analyse de paramètres en particulier.
 
@@ -499,7 +501,7 @@ Pour ce qui est d'un stagiaire comme Robin, le coût est moindre. La gratificati
 		\multicolumn{4}{|l|}{\textbf{Total}} & 13 549,74€  \\
 		\hline
 	\end{tabular}
-	\caption{Coûts humains de mon PFE}
+	\caption{Coûts humains de ce PFE}
 	\label{couts}
 \end{table}
 
@@ -579,7 +581,7 @@ Cette méthode serait donc une très bonne méthode à implémenter pour être d
 
 \subsection{AutoEncoder}
 
-Cette méthode publiée en 2020 \cite{autoencoder} est appelée <<AutoEncoder>> dans le reste du document, mais elle utilise en réalité 2 réseaux de type autoencoder ainsi que des forêts d'isolation.
+Cette méthode publiée en 2020 \cite{autoencoder} est appelée <<AutoEncoder>> dans le reste du document, mais elle utilise en réalité 2 réseaux de type auto-encoder ainsi que des forêts d'isolation.
 
 \begin{figure}[ht]
 	\centering
@@ -589,7 +591,7 @@ Cette méthode publiée en 2020 \cite{autoencoder} est appelée <<AutoEncoder>> 
 \end{figure}
 
 \bigskip
-Le plus important pour comprendre ce modèle est le fonctionnement d'un AutoEncoder. C'est encore une fois un réseau de neurone, avec une structure simple en <<double entonnoir>> (voir figure \ref{autoencoder}). L'objectif de cette structure est d'apprendre un encodage (et décodage) de données pour réduire la taille de cette donnée, avec une perte d'information minimale. La valeur encodée est donc ce que l'on va retrouver dans la couche cachée au centre du réseau, et notre apprentissage nous permet d'encoder et de décoder des données par la suite.
+Le plus important pour comprendre ce modèle est le fonctionnement d'un auto-encoder. C'est encore une fois un réseau de neurone, avec une structure simple en <<double entonnoir>> (voir figure \ref{autoencoder}). L'objectif de cette structure est d'apprendre un encodage (et décodage) de données pour réduire la taille de cette donnée, avec une perte d'information minimale. La valeur encodée est donc ce que l'on va retrouver dans la couche cachée au centre du réseau, et notre apprentissage nous permet d'encoder et de décoder des données par la suite.
 
 \begin{figure}[ht]
 	\centering
@@ -599,10 +601,11 @@ Le plus important pour comprendre ce modèle est le fonctionnement d'un AutoEnco
 \end{figure}
 
 \bigskip
-La structure complète du modèle est détaillée dans la figure \ref{modeleautoencoder}. Le premier autoencoder est entrainé à encoder les \glspl{log}, soit en extraire les variables significatives. Ensuite, la forêt d'isolation fait une première passe de détection d'anomalies selon ces logs encodés, ce qui à la fois accélère le processus et améliore la détection. Enfin, une seconde passe de détection d'anomalies est faite avec un second autoencoder, qui va récupérer à la fois les valeurs négatives détectées par la forêt d'isolation et les valeurs positives. Cette passe permet de déterminer et utiliser un seuil d'acceptation des logs.
+La structure complète du modèle est détaillée dans la figure \ref{modeleautoencoder}. Le premier auto-encoder est entrainé à encoder les \glspl{log}, soit en extraire les variables significatives. Ensuite, la forêt d'isolation fait une première passe de détection d'anomalies selon ces logs encodés, ce qui à la fois accélère le processus et améliore la détection. Enfin, une seconde passe de détection d'anomalies est faite avec un second auto-encoder, qui va récupérer à la fois les valeurs négatives détectées par la forêt d'isolation et les valeurs positives. Cette passe permet de déterminer et utiliser un seuil d'acceptation des logs.
 
-C'est une structure très complexe, et je ne saurais décrire en détail les raisons de sa structure si particulière. Mais c'est une méthode qui n'est pas trop compliquée à mettre en place malgré tout, se basant sur des concepts bien connus et implémentés dans des librairies, qu'il suffit de composer. Les résultats détaillés dans le papier sont assez concluants, et les comparaisons du rapport d'expérience \cite{experiencereport} montrent qu'il est notamment très robuste pour des jeux de données avec beaucoup d'anomalies, ce qui n'est pas le cas des autres modèles.
+C'est une structure très complexe, et je ne saurais décrire en détail les raisons de sa structure si particulière. Mais c'est une méthode qui n'est pas trop compliquée à mettre en place malgré tout, se basant sur des concepts bien connus et implémentés dans des bibliothèques, qu'il suffit de composer. Les résultats détaillés dans le papier sont assez concluants, et les comparaisons du rapport d'expérience \cite{experiencereport} montrent qu'il est notamment très robuste pour des jeux de données avec beaucoup d'anomalies, ce qui n'est pas le cas des autres modèles.
 
+\newpage
 \section{Analyse des jeux de données disponibles}
 
 Nous avons réussi à obtenir un large jeu de données de \glspl{log} de l'application \gls{MEDOC} dont j'ai parlé succinctement dans la section \ref{dgfip}. Elle produit une grosse quantité de logs liés notamment aux parcours utilisateurs durant leur sessions sur l'application. Voici un exemple de logs tiré de ce jeu de données:
@@ -682,6 +685,7 @@ La dernière analyse effectuée est celle de la composition des \glspl{log}. Le 
 	\label{proportionsess}
 \end{figure}
 
+\newpage
 \section{Développement du nouveau projet}
 
 Durant la partie scientifique du projet, et ayant déjà travaillé sur le projet de Rémi et Léa, différents points d'évolutions sont devenus apparents. Le projet est très large et il ressemble à un projet auquel on aurait rajouté des modules au fur et à mesure, sans planification au départ, ni de temps passé à repenser cette structure. Le problème qui se pose ici est celui de la dette technique, qui s'accumule sur les projets à grande échelle si elle n'est pas prise en compte.
@@ -708,7 +712,10 @@ L'idée était donc de réécrire le projet, en partant non pas d'un algorithme 
 
 La figure \ref{archireecriture} détaille la structure de classe pour les modèles de la réécriture. On peut voir beaucoup de similarités avec la structure précédente, mais celle-ci est déjà plus formalisée, et surtout il est envisageable d'y rajouter des composants. Cela est dû à la séparation des types de modèles, ainsi que leur abstraction. Un modèle complet est capable de s'entraîner, d'analyser un fichier de \glspl{log}, et d'écouter des logs en direct. On n'a pas besoin de connaître son fonctionnement interne si on l'utilise juste à haut niveau. Ce principe est utilisé à tous les niveaux de l'architecture, par exemple pour la sauvegarde: tous les types de modèles, ainsi que les parseurs, doivent pouvoir être enregistrés et chargés, et c'est donc défini par l'interface <<\texttt{Sauvegarde}>>.
 
-\todo{A terminer}
+\bigskip
+Cette architecture permet ensuite l'implémentation des différents algorithmes retenus. La (ré)\-implémentation de DeepLog est un point à prendre en compte, pour permettre son utilisation au sein de la nouvelle version ainsi que sa comparaison avec les autres algorithmes. Une première version à été produite à l'aide de la bibliothèque open-source Python \texttt{deeplog}. Elle se base sur une implémentation assez rudimentaire du modèle à l'aide de PyTorch, une bibliothèque d'\gls{ml} assez reconnue. Un module <<\texttt{ModèleDeeplogParsé}>> à donc été développé, en passant les différentes méthodes directement à la bibliothèque. Ensuite, en intégrant une bibliothèque implémentant Drain dans un module \texttt{Parseur}, il est possible de construire un \texttt{ModèleParseur}. Ce dernier est alors utilisable comme décrit plus haut.
+
+L'implémentation faite par Rémi avec Tensorflow a ensuite été en partie réutilisée, de façon à être intégrée dans le modèle de classes. Ici, on implémente des modules de type \texttt{ModèleSuite} et \texttt{ModèleParam}, de la même façon que dans le projet original. Ces modèles sont regroupés dans un \texttt{ModèleSuiteParam}, qui est combiné avec le module Drain pour obtenir, encore une fois, un modèle complet et utilisable.
 
 \chapter{L'humain contre la machine}
 
@@ -749,6 +756,10 @@ Ici, son but premier est effectivement la substitution à une tâche auparavant 
 \newpage
 \chapters{Conclusion}
 
+Ce mémoire décrit différentes facettes d'un sujet de PFE très complexe, qui comporte à la fois des concepts techniques et scientifiques poussés, ainsi que des problématiques organisationnelles et humaines modernes. Je pense pouvoir dire que ce projet a été un succès, dressant un état de l'art complet et comparatif des différents algorithmes d'analyse de \glspl{log} et en proposant une implémentation flexible et accessible. Malgré les difficultés rencontrées au court du projet, nous avons su coopérer et le mener jusqu'aujourd'hui.
+
+Ce projet est voué à être repris et évoluer dans le futur, soit par de futurs alternants de IMT Atlantique, soit par des développeurs intéressés par le sujet au sein de la \gls{DGFiP}. J'espère que ces futurs évolutions permettront l'adoption de ce projet au sein des équipes de développement. Cette initiative mettrait en avant la valeur de l'innovation et des technologies modernes pour les projets de la DGFiP.
+
 \stoplist[main]{lof}
 
 % BIBLIOGRAPHIE
@@ -769,7 +780,6 @@ Ici, son but premier est effectivement la substitution à une tâche auparavant 
 % FIGURES
 \newpage
 \printlist[main]{lof}{}{\chapters{Table des figures}}
-
 
 % ANNEXES
 \newpage
