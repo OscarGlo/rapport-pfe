@@ -17,7 +17,7 @@
 	citecolor = blue!30!black,
 	urlcolor = purple!40!black
 }
-\usepackage[colorinlistoftodos,disable]{todonotes}
+\usepackage[colorinlistoftodos]{todonotes}
 \presetkeys{todonotes}{inline, color=blue!40!red!20}{}
 % Code
 \usepackage{listings}
@@ -192,6 +192,8 @@ Depuis le début 2019, il existe aussi à la DGFiP une cellule innovation, elle-
 
 Ce PFE est un projet très scientifique et va donc beaucoup dans la technique. En effet, l'objectif étant de trouver de nouveaux algorithmes d'analyse de \glspl{log} et de les mettre en place, une compréhension en détail du fonctionnement de ces techniques était nécessaire. Les notions dans ce chapitre sont utiles à la compréhension des points les plus techniques de ce rapport. La lecture de la section \ref{logs} au explique en détail la structure des logs, qui sont centraux à ce sujet de PFE.
 
+\todo{Ajouter exemples et illustrations}
+
 \section{Que sont les logs~?}
 \label{logs}
 
@@ -308,6 +310,8 @@ A la fin de cette boucle, un score d'isolation compris entre 0 (valeur normale) 
 
 \section{Contexte du projet}
 
+\todo{Déplacer au chapitre 1 ?}
+
 L'informatique possède un rôle central au sein de la \gls{DGFiP}, rempli par le \gls{SI} et ses nombreuses applications métier. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
 
 Une solution serait de former des équipes de maintenance aux différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient à temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas avéré que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
@@ -384,6 +388,8 @@ Suite à l'implémentation de DeepLog par Rémi, le projet était certes fonctio
 Le travail de Léa a donc été d'améliorer ce projet pour le rendre plus simple d'utilisation, mais aussi d'agrandir l'éventail de possibilités d'analyse proposé. Il a été choisi de créer une nouvelle interface avec le modèle via la bibliothèque Blockly créée par Google, détaillée à la suite. Je ferai aussi une explication des autres algorithmes mis en place, sur lesquels j'avais aidé Léa au moment de son PFE.
 
 \subsection{Blockly}
+
+\todo{Parler des utilisateurs (connaissance de python, machine learning, temps)}
 
 \begin{figure}[ht]
 	\centering
@@ -472,48 +478,6 @@ Le dernier point résonne énormément avec le projet. En effet, comme détaill�
 
 \bigskip
 Finalement, je trouve dommage de ne pas avoir pu complèteent mettre en place l'agilité dans le projet et j'aurais dû y faire plus attention, car un projet de recherche se porte en réalité très bien à son utilisation. En effet, le fait de partir d'une problématique relativement vague et d'incrémentalement améliorer les objectifs ainsi que le projet est exactement le but de l'agilité. Il est intéressant de noter qu'il existe des façons d'appliquer les méthodes agiles avec un seul développeur \cite{agilesolo} \cite{ssdm}, et elles pourraient être étendues à une équipe de deux personnes aisément.
-
-\newpage
-\section{Évaluation économique du projet}
-
-\subsection{Coût du projet}
-
-Le projet étant assez limité en terme de moyens mis en place, son coût le sera aussi, principalement réduit au coût du personnel affecté au projet. Le tableau \ref{couts} décrit une approximation du coût humain de ce PFE. Les congés payés et périodes de cours ne sont pas retirée de la durée totale, en considérant que ce temps est tout de même situé durant la réalisation du projet ainsi que rémunéré.
-
-\bigskip
-En comptant une rémunération d'alternant de plus de 21 ans en dernière année d'alternance, mon salaire correspond à 78\% du SMIC, soit 1 283,55€ brut par mois. En prenant en compte les charges patronales à hauteur de 42\% du salaire brut, le coût pour l'entreprise atteint 1 822,64€ par mois pour l'entreprise.  Cela correspond à un taux pour l'entreprise de 84,12€ par jour ouvré.
-
-Pour ce qui est d'un stagiaire comme Robin, le coût est moindre. La gratification pour un stage de plus de deux mois est de 3,90€ par heure, ce qui revient a 27,30€ par jour ouvré. Ce montant est exonéré de charges sociales et patronales, il n'y a donc pas de surplus a considérer dans ce calcul.
-
-\todo{Coût Olivier?}
-
-\begin{table}[ht]
-	\centering
-	\begin{tabular}{|l|l|l|l|l|}
-		\hline
-		& \textbf{Début} & \textbf{Fin} & \textbf{Durée} & \textbf{Coût} \\
-		\hline
-		\textbf{Robin Gries} & Février & Juin & 105 jours ouvrés & 2 866,5€ \\
-		\hline
-		\textbf{Oscar Gloaguen} & Mars & Août & 127 jours ouvrés & 10 683,24€ \\
-		\hline
-		\textbf{Olivier Blanc} & Février & Août & \makecell[l]{26 jours ouvrés \\ ($\sim$1 jour/semaine)} & 8 000€ \\
-		\hline \hline
-		\multicolumn{4}{|l|}{\textbf{Total}} & 21 549,74€  \\
-		\hline
-	\end{tabular}
-	\caption{Coûts humains de ce PFE}
-	\label{couts}
-\end{table}
-
-Il reste à prendre en compte les coûts matériels du projet. Mais il s'avère que ces coûts reviennent finalement à 0. En effet, aucun matériel n'a été affecté spécifiquement pour ce projet: les PC que moi et Robin utilisaient nous ont certes été affectés, mais ce sont des PC qui seront réutilisés suite à notre départ. De la même façon, nous utilisons des systèmes d'exploitation libres et gratuits (Fedora pour ma part), ainsi que des logiciels gratuits ou sous licence étudiante (par exemple la suite JetBrains). Le coût logiciel est donc lui aussi 0. Nous n'utilisons aussi pas de serveurs, tels que pour des machines virtuelles, étant donné la teneur encore expérimentale du projet.
-
-Ce projet est donc relativement peu coûteux pour la DGFiP, en partie par le fait qu'il est principalement composé d'un stagiaire et d'un alternant, mais surtout de l'absence de coûts matériels supplémentaires. Son intérêt dépendra alors énormément du retour sur investissement qu'il amène, détaillé dans la partie suivante.
-
-\subsection{Retour sur investissement}
-
-\todo{Rédiger ROI}
-
 \newpage
 \chapter{Processus scientifique et réalisation du projet}
 
@@ -718,7 +682,50 @@ Cette architecture permet ensuite l'implémentation des différents algorithmes 
 
 L'implémentation faite par Rémi avec Tensorflow a ensuite été en partie réutilisée, de façon à être intégrée dans le modèle de classes. Ici, on implémente des modules de type \texttt{ModèleSuite} et \texttt{ModèleParam}, de la même façon que dans le projet original. Ces modèles sont regroupés dans un \texttt{ModèleSuiteParam}, qui est combiné avec le module Drain pour obtenir, encore une fois, un modèle complet et utilisable. L'implémentation des autres algorithmes se fait de la même façon, en intégrant les algorithmes dans les différents modules qui correspondent pour former un modèle complet.
 
+\todo{Clarifier le travail et les résultats}
+
+\newpage
+\section{Évaluation économique du projet}
+
+\subsection{Coût du projet}
+
+Le projet étant assez limité en terme de moyens mis en place, son coût le sera aussi, principalement réduit au coût du personnel affecté au projet. Le tableau \ref{couts} décrit une approximation du coût humain de ce PFE. Les congés payés et périodes de cours ne sont pas retirée de la durée totale, en considérant que ce temps est tout de même situé durant la réalisation du projet ainsi que rémunéré.
+
+\bigskip
+En comptant une rémunération d'alternant de plus de 21 ans en dernière année d'alternance, mon salaire correspond à 78\% du SMIC, soit 1 283,55€ brut par mois. En prenant en compte les charges patronales à hauteur de 42\% du salaire brut, le coût pour l'entreprise atteint 1 822,64€ par mois pour l'entreprise.  Cela correspond à un taux pour l'entreprise de 84,12€ par jour ouvré.
+
+Pour ce qui est d'un stagiaire comme Robin, le coût est moindre. La gratification pour un stage de plus de deux mois est de 3,90€ par heure, ce qui revient a 27,30€ par jour ouvré. Ce montant est exonéré de charges sociales et patronales, il n'y a donc pas de surplus a considérer dans ce calcul.
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		& \textbf{Début} & \textbf{Fin} & \textbf{Durée} & \textbf{Coût} \\
+		\hline
+		\textbf{Robin Gries} & Février & Juin & 105 jours ouvrés & 2 866,5€ \\
+		\hline
+		\textbf{Oscar Gloaguen} & Mars & Août & 127 jours ouvrés & 10 683,24€ \\
+		\hline
+		\textbf{Olivier Blanc} & Février & Août & \makecell[l]{26 jours ouvrés \\ ($\sim$1 jour/semaine)} & 8 000€ \\
+		\hline \hline
+		\multicolumn{4}{|l|}{\textbf{Total}} & 21 549,74€  \\
+		\hline
+	\end{tabular}
+	\caption{Coûts humains de ce PFE}
+	\label{couts}
+\end{table}
+
+Il reste à prendre en compte les coûts matériels du projet. Mais il s'avère que ces coûts reviennent finalement à 0. En effet, aucun matériel n'a été affecté spécifiquement pour ce projet: les PC que moi et Robin utilisaient nous ont certes été affectés, mais ce sont des PC qui seront réutilisés suite à notre départ. De la même façon, nous utilisons des systèmes d'exploitation libres et gratuits (Fedora pour ma part), ainsi que des logiciels gratuits ou sous licence étudiante (par exemple la suite JetBrains). Le coût logiciel est donc lui aussi 0. Nous n'utilisons aussi pas de serveurs, tels que pour des machines virtuelles, étant donné la teneur encore expérimentale du projet.
+
+Ce projet est donc relativement peu coûteux pour la DGFiP, en partie par le fait qu'il est principalement composé d'un stagiaire et d'un alternant, mais surtout de l'absence de coûts matériels supplémentaires. Son intérêt dépendra alors énormément du retour sur investissement qu'il amène, détaillé dans la partie suivante.
+
+\subsection{Retour sur investissement}
+
+\todo{Rédiger ROI}
+
 \chapter{L'humain contre la machine}
+
+\todo{Hors sujet :(}
 
 L'intelligence artificielle est une technologie qui a connu une grande expansion durant cette décennie, et comme toute technologie, a connu des éloges ainsi que des critiques. Mais plus elle est présente dans notre vie, plus les peurs liées à son utilisation se font ressentir. En grande partie, les gens ont peur d'une chose: la perte de leur travail aux dépens d'une machine. Nous allons étudier cette thèse avec l'aide du premier chapitre du livre <<Le futur du travail>> \cite{futurtravail} par J.S. Carbonell, chercheur en sciences sociales du travail.
 
