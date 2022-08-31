@@ -17,7 +17,7 @@
 	citecolor = blue!30!black,
 	urlcolor = purple!40!black
 }
-\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorinlistoftodos,disable]{todonotes}
 \presetkeys{todonotes}{inline, color=blue!40!red!20}{}
 % Code
 \usepackage{listings}
@@ -155,7 +155,6 @@ Les \glspl{log} sont une source importante de données détaillant le fonctionne
 \pagestyle{fancy}
 \glsresetall
 \chapters{Introduction}
-\todo{1-2 pages}
 
 Le projet \texttt{analyse-logs} a été développé par deux précédents apprentis de la \gls{DGFiP}, Rémi Grison puis Léa Lebert. Cependant, le projet ayant été développé il y a déjà 4 ans, une question s'est posée sur l'évolution du domaine. De nouvelles recherches et de nouveaux algorithmes ont été publiés entre temps et pourraient faire évoluer le projet. C'est ici que nait le sujet de ce PFE. Ce mémoire détaille le processus d'évolution de ce projet dans l'objectif de le tenir à jour sur l'état de l'art.
 
@@ -166,7 +165,9 @@ J'ai travaillé sur cette problématique en binôme avec Robin Gries, un stagiai
 Ce sujet de PFE s'intègre dans la stratégie d'innovation du \gls{SI} de la \gls{DGFiP}. L'objectif est de montrer l'efficacité de ces outils, pour mettre en valeur l'innovation et pousser leur utilisation au sein du \gls{SI}. Dans ce cadre, une organisation proche de celle d'un projet de recherche a été suivie. Pour cela, nous avons dans un premier temps composé et étudié un état de l'art des algorithmes de détection d'anomalies existants. Dans un second temps, nous avons développé une nouvelle structure logicielle, pour ensuite implémenter, tester et comparer les différents algorithmes retenus.
 
 \newpage
-\chapter{La DGFiP, administration en évolution constante}
+\chapter{La DGFiP}
+
+\section{Une administration aux enjeux importants}
 \label{dgfip}
 La \gls{DGFiP} est une administration française née de la fusion de la Direction \gls{DGI} et de la \gls{DGCP} en 2008. Elle hérite alors des missions des deux entités, en faisant un service public très étendu, en charge notamment de la collecte des impôts et taxes et de la législation fiscale. La DGFiP compte aujourd'hui près de 95.000 employés titulaires, la faisant une des plus grandes administrations françaises.
 
@@ -188,11 +189,21 @@ Ce bureau était auparavant nommé SI-1C, et ses missions n'ont pas changé avec
 Depuis le début 2019, il existe aussi à la DGFiP une cellule innovation, elle-même sous la tutelle d'Olivier. Son objectif est de mettre en avant des technologies innovantes et des projets expérimentaux, pour permettre l'évolution des logiciels faces aux normes de développement. Les alternants de l'IMT embauchés par Olivier sont rattachés à cette cellule, leur permettant de mener des projets modernes et formateurs. De plus, les projets d'innovation et de modernisation s'inscrivent bien dans une démarche d'ingénieur, nous permettant de guider leur déroulement dans son entièreté.
 
 \newpage
+\section{Contexte du projet}
+
+L'informatique possède un rôle central au sein de la \gls{DGFiP}, rempli par le \gls{SI} et ses nombreuses applications métier. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
+
+Une solution serait de former des équipes de maintenance aux différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient à temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas avéré que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
+
+\bigskip
+Il y a 4 ans, mon tuteur, Olivier Blanc, s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie \ref{sectiondeeplog}). Olivier est parti du principe que les logs sont le langage parlé des applications. Si un modèle était capable d'apprendre ce langage, il serait possible de détecter des erreurs linguistiques, qui représenteraient des anomalies de l'application.
+
+Rémi Grison, apprenti à la DGFiP en 2019, partant de cette idée, a trouvé le papier DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme son sujet de PFE. Léa Lebert à ensuite succédé à Rémi, puis, un an après le départ de Léa, j'ai repris le projet.
+
+\newpage
 \chapter{Notions techniques}
 
 Ce PFE est un projet très scientifique et va donc beaucoup dans la technique. En effet, l'objectif étant de trouver de nouveaux algorithmes d'analyse de \glspl{log} et de les mettre en place, une compréhension en détail du fonctionnement de ces techniques était nécessaire. Les notions dans ce chapitre sont utiles à la compréhension des points les plus techniques de ce rapport. La lecture de la section \ref{logs} au explique en détail la structure des logs, qui sont centraux à ce sujet de PFE.
-
-\todo{Ajouter exemples et illustrations}
 
 \section{Que sont les logs~?}
 \label{logs}
@@ -308,20 +319,6 @@ A la fin de cette boucle, un score d'isolation compris entre 0 (valeur normale) 
 \newpage
 \chapter{L'existant: le projet analyse-logs}
 
-\section{Contexte du projet}
-
-\todo{Déplacer au chapitre 1 ?}
-
-L'informatique possède un rôle central au sein de la \gls{DGFiP}, rempli par le \gls{SI} et ses nombreuses applications métier. Mais un parc applicatif si étendu pose un problème majeur~: celui de la maintenance. En effet, la maintenance logicielle est un processus très coûteux, surtout en termes d'heures de travail de personnes qualifiées. Ce sont les développeurs des applications à maintenir qui doivent effectuer cette maintenance, car c'est eux qui connaissent le fonctionnement interne de l'application.
-
-Une solution serait de former des équipes de maintenance aux différents logiciels. Malheureusement, cela demanderait encore plus de moyens, à la fois prenant encore du temps aux développeurs, mais aussi nécessitant d'embaucher des personnes qui travailleraient à temps plein sur la maintenance, ce qui n'est pas envisageable. Il n'est même pas avéré que cela libère vraiment du temps aux développeurs, étant donné l'évolution constante des logiciels et les formations supplémentaires qu'il faudrait donner pour tenir une équipe de maintenance à jour.
-
-\bigskip
-Il y a 4 ans, mon tuteur, Olivier Blanc, s'est penché sur la question. Le vrai problème était bien de faire gagner du temps aux développeurs en facilitant et accélérant la maintenance d'une application. Dans le cas d'une erreur dans l'application qui stopperait partiellement ou complètement son fonctionnement, sa correction est obligatoire pour les équipes. Le problème de retrouver la source de cette erreur et de la corriger est alors aussi important et c'est ici que rentrent en jeu les \glspl{log} applicatifs (voir partie \ref{sectiondeeplog}). Olivier est parti du principe que les logs sont le langage parlé des applications. Si un modèle était capable d'apprendre ce langage, il serait possible de détecter des erreurs linguistiques, qui représenteraient des anomalies de l'application.
-
-Rémi Grison, apprenti à la DGFiP en 2019, partant de cette idée, a trouvé le papier DeepLog \cite{deeplog}, dont le but était d'utiliser les logs pour détecter et prédire les erreurs, ainsi que remonter vers leur cause initiale. Le projet \texttt{analyse-logs} est alors né, commençant comme son sujet de PFE. Léa Lebert à ensuite succédé à Rémi, puis, un an après le départ de Léa, j'ai repris le projet.
-
-\newpage
 \section{Le modèle original: DeepLog}
 \label{sectiondeeplog}
 
@@ -389,8 +386,6 @@ Le travail de Léa a donc été d'améliorer ce projet pour le rendre plus simpl
 
 \subsection{Blockly}
 
-\todo{Parler des utilisateurs (connaissance de python, machine learning, temps)}
-
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.4\textwidth]{images/blockly.png}
@@ -403,7 +398,7 @@ Blockly est une bibliothèque publiée par Google, permettant de créer des édi
 \bigskip
 Olivier et Léa ont fait le choix d'utiliser cette bibliothèque pour représenter les différentes structures de modèles, ou <<pipelines>>. En effet, si on considère chaque bloc du modèle, il est possible de les remplacer par d'autres blocs équivalents, par exemple un autre analyseur de modèle. Blockly permet très bien cette représentation, avec des couleurs et des formes qui correspondent aux types des éléments. Chaque étape du modèle pourrait alors avoir son type de bloc, et l'interface serait visuellement très intuitive.
 
-L'interface Blockly a donc été développée par dessus le travail de Rémi, mais aussi avec les autres algorithmes détaillés dans la partie suivante. En plus de permettre la substitution des algorithmes par d'autres alternatives, il permet aussi de simplifier l'utilisation du projet pour les futurs utilisateurs. En effet, il est possible avec Blockly de facilement et intuitivement créer et tester des modèles, adaptés aux besoins des différentes applications de la \gls{DGFiP}. Un exemple de modèle construit avec l'interface blockly est présenté en figure \ref{blocklydeeplog}.
+L'interface Blockly a donc été développée par dessus le travail de Rémi, mais aussi avec les autres algorithmes détaillés dans la partie suivante. En plus de permettre la substitution des algorithmes par d'autres alternatives, il permet aussi de simplifier l'utilisation du projet pour les futurs utilisateurs. En effet, il est possible avec Blockly de facilement et intuitivement créer et tester des modèles, adaptés aux besoins des différentes applications de la \gls{DGFiP}. Si les futurs utilisateurs seront en effet des développeurs, leur expérience avec python est en générale minime, voire nulle. Les concepts d'\gls{deep} sont aussi peu connus de ces utilisateurs. Blockly permet donc d'abstraire en partie ces points de difficultés, et donc faire gagner encore plus de temps pour la maintenance. Il ne faudrait pas qu'apprendre et mettre en place cet outil fasse perdre du temps au total aux développeurs, car ceci empêcherait sa démocratisation sur les projets.
 
 \begin{figure}[ht]
 	\centering
@@ -425,59 +420,6 @@ En m'inspirant de ce qui a été fait sur les forêts d'isolation, j'ai fait le 
 
 Les modules qui ont été développés permettent donc de remplacer l'analyse de paramètres de DeepLog par n'importe quel algorithme de la bibliothèque scikit, s'intégrant parfaitement dans la structure par blocs proposée par Blockly. Trois algorithmes de détections d'anomalies ont été retenus: les forêts d'isolation (version scikit), les SVM (Support Vector Model, ou \href{https://fr.wikipedia.org/wiki/Machine_à_vecteurs_de_support}{Séparateur à Vaste Marge}) à une classe, et les LOF (\href{https://en.wikipedia.org/wiki/Local_outlier_factor}{Local Outlier Factor}). Ce sont trois méthodes de l'état de l'art en apprentissage non profond pour la détection d'anomalie, qui pourraient s'avérer utiles pour l'analyse de paramètres en particulier.
 
-\newpage
-\chapter{Gestion et évaluation du projet}
-
-\section{Organisation du projet}
-
-\subsection{La planification et les aléas}
-
-Comme je l'ai mentionné plus haut, Robin a démarré son stage avant mon retour d'école. Il a donc fallu lui planifier ses tâches à réaliser avant mon arrivée, afin d'utiliser efficacement tout le temps disponible pour le projet. Mon premier travail à donc été, avant la période d'école de Janvier, de faire une première planification du projet et tout particulièrement les tâches de Robin sur la période de février.1
-
-Ce premier planning effectué est disponible en annexe \ref{planning}. Différents points sont intéressants à noter à son sujet. Tout d'abord, la possibilité pour moi d'un stage à l'étranger était toujours envisagée. Cependant, suite à une absence de réponse de l'entreprise que j'avais contacté, j'ai décidé de suivre l'exercice de remplacement. Cela a permis de libérer du temps pour la réalisation du projet.
-
-Les sprints définis dans ce planning étaient relativement libre dans leur contenu. L'idée principale était de développer, tester et comparer les algorithmes retenus pendant l'état de l'art tout en essayant de suivre un mode agile.
-
-\bigskip
-Notre méthode de travail avec Robin était très collaborative. Nous avons beaucoup discuté au fil du projet pour régler des problèmes, ou mieux comprendre des points particuliers. Cette méthode collaborative est très intéressante dans le cadre d'un projet de recherche, car sa complexité était élevée, et nous n'aurions pas pu avancer aussi bien sans ces échanges importants.
-
-\bigskip
-Le premier point qui est venu impacter le planning est ma sous-estimation de la charge de travail liée à la partie académique du projet. En effet, la recherche peut être un processus lent et fastidieux. Dans le cadre de la méta-analyse (analyse de nombreux papiers de recherche pour en tirer des conclusions), ce n'est que plus vrai, nécessitant d'abord de trouver les bon papiers du domaine, puis de les comparer et en tirer des résultats.
-
-Cet allongement des tâches de Robin m'a permis de commencer le développement de la réécriture du projet, qui n'était pas du tout prévue dans le planning à l'origine. Cette réécriture m'a pris beaucoup de temps, et a impacté le planning.
-
-\bigskip
-A la moitié du projet, un point à été fait pour évaluer notre progression ainsi que l'évolution de la planification. Les changements de planning effectués sur la première moitié du projet, ainsi que les changements dans la planification future, sont reflétés dans le second planning en annexe \ref{planning2}. Les sprints ont été remplacés par des tâches précises, nous avons donc abandonné l'agilité. Je vais donc détailler les obstacles à l'utilisation des méthodes agiles, ainsi que les causes dans notre projet, dans la partie suivante.
-
-\subsection{Les freins à l'agilité}
-
-L'agilité est une approche à la gestion de projet née du manifeste agile, basée sur 4 valeurs simples: (<<{>}>> représente <<plutôt que>>)
-
-\begin{itemize}
-	\item Individus et interactions > Processus et outils
-	\item Logiciel fonctionnel > Documentation exhaustive
-	\item Collaboration avec le client > Négociation contractuelle
-	\item Adaptation au changement > Exécution d'un plan
-\end{itemize}
-
-De ces points naissent différentes méthodes telles que Scrum, qui décrit un cadre plus précis sur la mise en place et la réalisation de cette gestion de projet. Des <<sprints>> sont mis en place, qui séparent le temps du projet en cycles courts itératifs (en moyenne autour de quelques semaines). A chaque sprint, différentes tâches sont attribuées aux développeurs et une démonstration de ce qui a été réalisé est faite à la fin de ces sprints.
-
-\bigskip
-Les méthodes agiles s'appliquent très bien au développement informatique et c'est majoritairement dans ce domaine qu'elles sont utilisées. Mais une étude publiée en 2013 \cite{obstacles} met en avant les différents facteurs qui peuvent freiner leur mise en place. Le papier nous montre le fait que ces freins à l'agilité sont en majorité causés par la culture et la structure trop traditionnelle des organisations concernées. Certains des points mentionnés dans ce papier s'appliquent en effet à notre situation, mais des nuances sont présentes dans le contexte d'un projet de recherche. Nous étions aussi un binôme, et nous n'avions pas de méthodologies précédentes pour nous faire former des aprioris.
-
-Un des problèmes mentionné dans le papier est le temps de formation, qui à été un de nos plus gros freins. Si j'ai effectivement étudié les méthodes agiles en cours, je n'ai jamais réellement eu l'occasion de les mettre en pratique dans mes projets. L'utilisation assez limitée de l'agilité dans les projets de la \gls{DGFiP}, ainsi que mon manque d'implication dans d'autres projets, ont limité mon expérience de terrain avec ces méthodes, et il était donc difficile pour moi de les mettre en place.
-
-\bigskip
-Pour reprendre les différents principes agiles, il est intéressant de noter que le premier point a bien été mis en place sur le projet. En effet, la relation entre moi et Robin, ainsi qu'entre nous et Olivier, était un des points cruciaux au bon déroulement du projet. Des processus détaillés n'ont pas été mis en place pour ceci, mais aussi en partie car il est compliqué de formaliser un processus de recherche et d'innovation.
-
-Un problème pour la mise en place de l'agilité à été le second point. En effet, la mise en place d'un logiciel fonctionnel n'est pas une évidence dans un cadre de recherche. Si le principe agile parle de documentation pour le logiciel, je pense que cette idée peut aussi prendre en compte la documentation en amont du logiciel. Ce processus de documentation a finalement été au cœur du projet, au dépens de la partie technique et implémentation. Cependant, il est important de noter que cette partie n'était pas négligeable. Elle a duré le temps nécessaire pour trouver, comprendre, sélectionner et compiler les différents algorithmes. Ce genre de choses n'est pas vraiment pris en compte dans des méthodes comme Scrum, qui se concentrent plutôt sur des projets de développement pur.
-
-Pour ce qui est de la collaboration avec le client, on peut considérer Olivier comme le client de ce projet. Ce qui a manqué pour mettre en place ce point, notamment comme dans Scrum avec le <<sprint review>>, était une production régulière et présentable de fonctionnalités. Scrum se base sur le développement d'un MVP (Minimum Viable Product, soit produit minimum viable), auquel on ajoute des fonctionnalités complètes à chaque sprint, et le client est capable dans la review de les tester et de faire évoluer les besoins. Ce n'est pas que les négociations contractuelles ont pris le pas sur la communication, comme il n'y en a pas eu non plus; le point s'est juste difficilement appliqué au projet.
-
-Le dernier point résonne énormément avec le projet. En effet, comme détaillé dans la partie précédente, le planning était notre source d'organisation et si des sprints étaient prévus par la suite, une partie des tâches était très fixée dans le temps. Au fur et à mesure du déroulement, il est devenu évident que le planning ne correspondrait pas à l'effort réel demandé pour certaines tâches. Nous avons donc fait évoluer le planning durant le projet pour qu'il reflète la différence avec le réel. C'est là que mettre en place une méthode agile aurait pu vraiment nous aider. Certes, nous n'aurions pas eu de façon d'approximer le temps total du projet ainsi que des différentes tâches, et c'est souvent un des problèmes qui se posent pour mettre en place ces méthodes. Mais cela nous aurait permis de ne pas essayer de suivre un planning, et plutôt de se concentrer sur le plus important: ce qu'il y a à faire (soit le backlog).
-
-\bigskip
-Finalement, je trouve dommage de ne pas avoir pu complèteent mettre en place l'agilité dans le projet et j'aurais dû y faire plus attention, car un projet de recherche se porte en réalité très bien à son utilisation. En effet, le fait de partir d'une problématique relativement vague et d'incrémentalement améliorer les objectifs ainsi que le projet est exactement le but de l'agilité. Il est intéressant de noter qu'il existe des façons d'appliquer les méthodes agiles avec un seul développeur \cite{agilesolo} \cite{ssdm}, et elles pourraient être étendues à une équipe de deux personnes aisément.
 \newpage
 \chapter{Processus scientifique et réalisation du projet}
 
@@ -682,7 +624,59 @@ Cette architecture permet ensuite l'implémentation des différents algorithmes 
 
 L'implémentation faite par Rémi avec Tensorflow a ensuite été en partie réutilisée, de façon à être intégrée dans le modèle de classes. Ici, on implémente des modules de type \texttt{ModèleSuite} et \texttt{ModèleParam}, de la même façon que dans le projet original. Ces modèles sont regroupés dans un \texttt{ModèleSuiteParam}, qui est combiné avec le module Drain pour obtenir, encore une fois, un modèle complet et utilisable. L'implémentation des autres algorithmes se fait de la même façon, en intégrant les algorithmes dans les différents modules qui correspondent pour former un modèle complet.
 
-\todo{Clarifier le travail et les résultats}
+\newpage
+\chapter{Gestion et évaluation du projet}
+
+\section{Organisation du projet}
+
+\subsection{La planification et les aléas}
+
+Comme je l'ai mentionné plus haut, Robin a démarré son stage avant mon retour d'école. Il a donc fallu lui planifier ses tâches à réaliser avant mon arrivée, afin d'utiliser efficacement tout le temps disponible pour le projet. Mon premier travail à donc été, avant la période d'école de Janvier, de faire une première planification du projet et tout particulièrement les tâches de Robin sur la période de février.1
+
+Ce premier planning effectué est disponible en annexe \ref{planning}. Différents points sont intéressants à noter à son sujet. Tout d'abord, la possibilité pour moi d'un stage à l'étranger était toujours envisagée. Cependant, suite à une absence de réponse de l'entreprise que j'avais contacté, j'ai décidé de suivre l'exercice de remplacement. Cela a permis de libérer du temps pour la réalisation du projet.
+
+Les sprints définis dans ce planning étaient relativement libre dans leur contenu. L'idée principale était de développer, tester et comparer les algorithmes retenus pendant l'état de l'art tout en essayant de suivre un mode agile.
+
+\bigskip
+Notre méthode de travail avec Robin était très collaborative. Nous avons beaucoup discuté au fil du projet pour régler des problèmes, ou mieux comprendre des points particuliers. Cette méthode collaborative est très intéressante dans le cadre d'un projet de recherche, car sa complexité était élevée, et nous n'aurions pas pu avancer aussi bien sans ces échanges importants.
+
+\bigskip
+Le premier point qui est venu impacter le planning est ma sous-estimation de la charge de travail liée à la partie académique du projet. En effet, la recherche peut être un processus lent et fastidieux. Dans le cadre de la méta-analyse (analyse de nombreux papiers de recherche pour en tirer des conclusions), ce n'est que plus vrai, nécessitant d'abord de trouver les bon papiers du domaine, puis de les comparer et en tirer des résultats.
+
+Cet allongement des tâches de Robin m'a permis de commencer le développement de la réécriture du projet, qui n'était pas du tout prévue dans le planning à l'origine. Cette réécriture m'a pris beaucoup de temps, et a impacté le planning.
+
+\bigskip
+A la moitié du projet, un point à été fait pour évaluer notre progression ainsi que l'évolution de la planification. Les changements de planning effectués sur la première moitié du projet, ainsi que les changements dans la planification future, sont reflétés dans le second planning en annexe \ref{planning2}. Les sprints ont été remplacés par des tâches précises, nous avons donc abandonné l'agilité. Je vais donc détailler les obstacles à l'utilisation des méthodes agiles, ainsi que les causes dans notre projet, dans la partie suivante.
+
+\subsection{Les freins à l'agilité}
+
+L'agilité est une approche à la gestion de projet née du manifeste agile, basée sur 4 valeurs simples: (<<{>}>> représente <<plutôt que>>)
+
+\begin{itemize}
+	\item Individus et interactions > Processus et outils
+	\item Logiciel fonctionnel > Documentation exhaustive
+	\item Collaboration avec le client > Négociation contractuelle
+	\item Adaptation au changement > Exécution d'un plan
+\end{itemize}
+
+De ces points naissent différentes méthodes telles que Scrum, qui décrit un cadre plus précis sur la mise en place et la réalisation de cette gestion de projet. Des <<sprints>> sont mis en place, qui séparent le temps du projet en cycles courts itératifs (en moyenne autour de quelques semaines). A chaque sprint, différentes tâches sont attribuées aux développeurs et une démonstration de ce qui a été réalisé est faite à la fin de ces sprints.
+
+\bigskip
+Les méthodes agiles s'appliquent très bien au développement informatique et c'est majoritairement dans ce domaine qu'elles sont utilisées. Mais une étude publiée en 2013 \cite{obstacles} met en avant les différents facteurs qui peuvent freiner leur mise en place. Le papier nous montre le fait que ces freins à l'agilité sont en majorité causés par la culture et la structure trop traditionnelle des organisations concernées. Certains des points mentionnés dans ce papier s'appliquent en effet à notre situation, mais des nuances sont présentes dans le contexte d'un projet de recherche. Nous étions aussi un binôme, et nous n'avions pas de méthodologies précédentes pour nous faire former des aprioris.
+
+Un des problèmes mentionné dans le papier est le temps de formation, qui à été un de nos plus gros freins. Si j'ai effectivement étudié les méthodes agiles en cours, je n'ai jamais réellement eu l'occasion de les mettre en pratique dans mes projets. L'utilisation assez limitée de l'agilité dans les projets de la \gls{DGFiP}, ainsi que mon manque d'implication dans d'autres projets, ont limité mon expérience de terrain avec ces méthodes, et il était donc difficile pour moi de les mettre en place.
+
+\bigskip
+Pour reprendre les différents principes agiles, il est intéressant de noter que le premier point a bien été mis en place sur le projet. En effet, la relation entre moi et Robin, ainsi qu'entre nous et Olivier, était un des points cruciaux au bon déroulement du projet. Des processus détaillés n'ont pas été mis en place pour ceci, mais aussi en partie car il est compliqué de formaliser un processus de recherche et d'innovation.
+
+Un problème pour la mise en place de l'agilité à été le second point. En effet, la mise en place d'un logiciel fonctionnel n'est pas une évidence dans un cadre de recherche. Si le principe agile parle de documentation pour le logiciel, je pense que cette idée peut aussi prendre en compte la documentation en amont du logiciel. Ce processus de documentation a finalement été au cœur du projet, au dépens de la partie technique et implémentation. Cependant, il est important de noter que cette partie n'était pas négligeable. Elle a duré le temps nécessaire pour trouver, comprendre, sélectionner et compiler les différents algorithmes. Ce genre de choses n'est pas vraiment pris en compte dans des méthodes comme Scrum, qui se concentrent plutôt sur des projets de développement pur.
+
+Pour ce qui est de la collaboration avec le client, on peut considérer Olivier comme le client de ce projet. Ce qui a manqué pour mettre en place ce point, notamment comme dans Scrum avec le <<sprint review>>, était une production régulière et présentable de fonctionnalités. Scrum se base sur le développement d'un MVP (Minimum Viable Product, soit produit minimum viable), auquel on ajoute des fonctionnalités complètes à chaque sprint, et le client est capable dans la review de les tester et de faire évoluer les besoins. Ce n'est pas que les négociations contractuelles ont pris le pas sur la communication, comme il n'y en a pas eu non plus; le point s'est juste difficilement appliqué au projet.
+
+Le dernier point résonne énormément avec le projet. En effet, comme détaillé dans la partie précédente, le planning était notre source d'organisation et si des sprints étaient prévus par la suite, une partie des tâches était très fixée dans le temps. Au fur et à mesure du déroulement, il est devenu évident que le planning ne correspondrait pas à l'effort réel demandé pour certaines tâches. Nous avons donc fait évoluer le planning durant le projet pour qu'il reflète la différence avec le réel. C'est là que mettre en place une méthode agile aurait pu vraiment nous aider. Certes, nous n'aurions pas eu de façon d'approximer le temps total du projet ainsi que des différentes tâches, et c'est souvent un des problèmes qui se posent pour mettre en place ces méthodes. Mais cela nous aurait permis de ne pas essayer de suivre un planning, et plutôt de se concentrer sur le plus important: ce qu'il y a à faire (soit le backlog).
+
+\bigskip
+Finalement, je trouve dommage de ne pas avoir pu complèteent mettre en place l'agilité dans le projet et j'aurais dû y faire plus attention, car un projet de recherche se porte en réalité très bien à son utilisation. En effet, le fait de partir d'une problématique relativement vague et d'incrémentalement améliorer les objectifs ainsi que le projet est exactement le but de l'agilité. Il est intéressant de noter qu'il existe des façons d'appliquer les méthodes agiles avec un seul développeur \cite{agilesolo} \cite{ssdm}, et elles pourraient être étendues à une équipe de deux personnes aisément.
 
 \newpage
 \section{Évaluation économique du projet}
@@ -717,15 +711,9 @@ Pour ce qui est d'un stagiaire comme Robin, le coût est moindre. La gratificati
 
 Il reste à prendre en compte les coûts matériels du projet. Mais il s'avère que ces coûts reviennent finalement à 0. En effet, aucun matériel n'a été affecté spécifiquement pour ce projet: les PC que moi et Robin utilisaient nous ont certes été affectés, mais ce sont des PC qui seront réutilisés suite à notre départ. De la même façon, nous utilisons des systèmes d'exploitation libres et gratuits (Fedora pour ma part), ainsi que des logiciels gratuits ou sous licence étudiante (par exemple la suite JetBrains). Le coût logiciel est donc lui aussi 0. Nous n'utilisons aussi pas de serveurs, tels que pour des machines virtuelles, étant donné la teneur encore expérimentale du projet.
 
-Ce projet est donc relativement peu coûteux pour la DGFiP, en partie par le fait qu'il est principalement composé d'un stagiaire et d'un alternant, mais surtout de l'absence de coûts matériels supplémentaires. Son intérêt dépendra alors énormément du retour sur investissement qu'il amène, détaillé dans la partie suivante.
-
-\subsection{Retour sur investissement}
-
-\todo{Rédiger ROI}
+Ce projet est donc relativement peu coûteux pour la DGFiP, en partie par le fait qu'il est principalement composé d'un stagiaire et d'un alternant, mais surtout de l'absence de coûts matériels supplémentaires. Son intérêt dépendra alors du retour sur investissement qu'il amène. Il est difficile de quantifier la valeur exacte du gain économique proposé par ce projet. Il est évident que son utilisation nécessite un temps de formation, à la fois sur sa mise en place, mais aussi et surtout sur son intérêt pour les développeurs. Mais suite à ce coût initial, l'outil proposera un gain de temps non négligeable sur le long terme. En effet, il ne suffit que de quelques développeurs formés sur chaque projet, pour qu'ils puissent le mettre en place durant de la maintenance et gagner du temps sur toute la durée de vie du projet.
 
 \chapter{L'humain contre la machine}
-
-\todo{Hors sujet :(}
 
 L'intelligence artificielle est une technologie qui a connu une grande expansion durant cette décennie, et comme toute technologie, a connu des éloges ainsi que des critiques. Mais plus elle est présente dans notre vie, plus les peurs liées à son utilisation se font ressentir. En grande partie, les gens ont peur d'une chose: la perte de leur travail aux dépens d'une machine. Nous allons étudier cette thèse avec l'aide du premier chapitre du livre <<Le futur du travail>> \cite{futurtravail} par J.S. Carbonell, chercheur en sciences sociales du travail.
 
@@ -783,7 +771,6 @@ Ce projet est voué à être repris et évoluer dans le futur, soit par de futur
 \label{glos}
 \newpage
 \printglossary[type=tech,nonumberlist]
-\todo{Étoffer les glossaires}
 
 % FIGURES
 \newpage
@@ -801,7 +788,5 @@ Ce projet est voué à être repris et évoluer dans le futur, soit par de futur
 \anneximage{orga_si}{0}{Organigramme des bureaux du SI}
 \anneximage{planning}{90}{Planning original du projet}
 \anneximage{planning2}{90}{Planning mis à jour au milieu du projet}
-
-\listoftodos
 
 \end{document}
